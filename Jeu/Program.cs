@@ -10,11 +10,8 @@ HttpClient client = new HttpClient();
 
 async Task<WeatherForecast> GetWeather(string path)
 {
-    WeatherForecast weather = null;
-    HttpResponseMessage response = await client.GetAsync(path);
-    if (response.IsSuccessStatusCode)
-        weather = await response.Content.ReadFromJsonAsync<WeatherForecast>();
-
+     HttpResponseMessage response = await client.GetAsync(path);
+    var weather = await response.Content.ReadFromJsonAsync < WeatherForecast> ();
     return weather;
 }
 
@@ -30,6 +27,7 @@ async Task RunAsync()
         var weather = await GetWeather("/WeatherForecast/");
 
         Console.WriteLine(weather.Display());
+        Console.WriteLine(weather.GetType().Name);
     }
     catch ( Exception e)
     {

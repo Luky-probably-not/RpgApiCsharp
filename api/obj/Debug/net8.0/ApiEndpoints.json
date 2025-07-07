@@ -9,7 +9,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "Modeles.WeatherForecast",
+        "Type": "Modeles.WeatherFarenheit",
         "MediaTypes": [
           "text/plain",
           "application/json",

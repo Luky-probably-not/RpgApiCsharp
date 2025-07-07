@@ -15,22 +15,13 @@ namespace api.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public async Task<WeatherForecast> Get()
+        public async Task<Dictionary<string, string>> Get()
         {
-            Console.WriteLine("hello there");
-            var weathers = Enumerable.Range(1, 5).Select(index => new WeatherForecast
-                {
-                    Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    TemperatureC = Random.Shared.Next(-20, 55),
-                })
-                .ToArray();
-
-            var wf = new WeatherForecast()
+            var wf = new Dictionary<string, string>
             {
-                Date = DateOnly.FromDateTime(DateTime.Now),
-                TemperatureC = Random.Shared.Next(-20, 55),
-
-            };
+                { Resource.TemperatureCelsius , "27"},
+                { Resource.Date , DateOnly.FromDateTime(DateTime.Now).ToString()}
+            }
 
             return wf;
         }
