@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Modeles {
+namespace Modeles.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Modeles {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Modeles.Resource", typeof(Resource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Modeles.Resources.Resource", typeof(Resource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,20 +61,11 @@ namespace Modeles {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Date.
+        ///   Recherche une chaîne localisée semblable à DoubleDegats.
         /// </summary>
-        internal static string Date {
+        internal static string DoubleDegats {
             get {
-                return ResourceManager.GetString("Date", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une chaîne localisée semblable à TemperatureC.
-        /// </summary>
-        internal static string TemperatureCelsius {
-            get {
-                return ResourceManager.GetString("TemperatureCelsius", resourceCulture);
+                return ResourceManager.GetString("DoubleDegats", resourceCulture);
             }
         }
     }
