@@ -2,12 +2,12 @@
 
 namespace Modeles.Capacites;
 
-public class Sacrifice() : Capacite(2, false, false, 4, 0)
+public class Sacrifice() : Capacite("Sacrifice", 0.4f, false, false, 9, 0, "Perd {ValeurPourcent} des pv actuels. Augmente les dégats en fonction des pv perdus")
 {
     public override void Utiliser(Entite utilisateur, Entite cible)
     {
-        var degats = utilisateur.PointDeVie * 0.4;
-        cible.Blesser((int)(Valeur + degats),utilisateur.Attaque,false);
+        var degats = utilisateur.PointDeVie * Valeur;
+        cible.Blesser((int)(3 + degats),utilisateur.Attaque,false);
         utilisateur.PointDeVie -= (int)degats;
         utilisateur.PointAction -= Cout;
     }

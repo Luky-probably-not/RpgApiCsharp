@@ -5,14 +5,9 @@ namespace api.Controllers;
 
 [ApiController]
 [Route("api/labyrinthe")]
-public class LabyrintheController : Controller
+public class LabyrintheController(ILogger<LabyrintheController> logger) : Controller
 {
-    private readonly ILogger<LabyrintheController> _logger;
-
-    public LabyrintheController(ILogger<LabyrintheController> logger)
-    {
-        _logger = logger;
-    }
+    private readonly ILogger<LabyrintheController> _logger = logger;
 
     [HttpGet("{taille}")]
     public Labyrinthe Get(string taille)

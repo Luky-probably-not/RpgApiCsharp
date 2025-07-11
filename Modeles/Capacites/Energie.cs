@@ -2,7 +2,7 @@
 
 namespace Modeles.Capacites;
 
-public class Energie() : Capacite(3, true, true, 5, 0)
+public class Energie() : Capacite("Energie", 3, true, true, 5, 0, "Restaure {Valeur} Points d'Actions a toute l'équipe")
 {
     public override void Utiliser(Entite utilisateur, Entite cible) { }
 

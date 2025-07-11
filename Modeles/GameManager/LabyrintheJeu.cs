@@ -1,43 +1,28 @@
-﻿using Modeles.LabyrintheLogique;
+﻿using System;
+using Modeles.LabyrintheLogique;
 
-namespace Modeles;
+namespace Modeles.GameManager;
 
-public class GameManager
+public static class LabyrintheJeu
 {
-    private static GameManager? _instance = null;
+    private static Labyrinthe Laby;
+    private static int PosColonne;
+    private static int PosLigne;
 
-    public Labyrinthe Laby;
-
-    private int PosLigne;
-    private int PosColonne;
-    private GameManager(){}
-
-    public static GameManager Instance
+    public static void PlayLabyrinthe(Labyrinthe laby)
     {
-        get
-        {
-            _instance ??= new GameManager();
-            return _instance;
-        }
-    }
-
-    public void Play()
-    {
+        Laby = laby;
         var arrive = false;
-        var score = 0;
         while (!arrive)
         {
             Laby.Display();
             PositionJoueur();
-            arrive = Deplacement(RecupererInput());
-            score++;
+            arrive = Pas(RecupererInput());
         }
         Laby.Display();
-        Console.WriteLine($"score : {score}");
-
     }
 
-    private void PositionJoueur()
+    private static void PositionJoueur()
     {
         for (var i = 0; i < Laby.Taille; i++)
         {
@@ -53,9 +38,9 @@ public class GameManager
         PosLigne = 0;
     }
 
-    private ConsoleKey RecupererInput()
+    private static ConsoleKey RecupererInput()
     {
-        List<ConsoleKey> toucheValide = 
+        List<ConsoleKey> toucheValide =
         [
             ConsoleKey.UpArrow,
             ConsoleKey.DownArrow,
@@ -73,7 +58,7 @@ public class GameManager
         return touche;
     }
 
-    private bool VerifierInput(ConsoleKey touche)
+    private static bool VerifierInput(ConsoleKey touche)
     {
         return touche switch
         {
@@ -85,14 +70,14 @@ public class GameManager
         };
     }
 
-    private bool Deplacement(ConsoleKey touche)
+    private static bool Pas(ConsoleKey touche)
     {
         var NS = touche switch
         {
             ConsoleKey.UpArrow => -1,
             ConsoleKey.DownArrow => 1,
             _ => 0
-        } ;
+        };
         var WE = touche switch
         {
             ConsoleKey.LeftArrow => -1,

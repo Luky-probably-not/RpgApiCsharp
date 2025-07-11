@@ -2,7 +2,7 @@
 
 namespace Modeles.Capacites;
 
-public class MultHit() : Capacite(3, false, false, 3, 0)
+public class MultiCoup() : Capacite("MultiCoup", 3, false, false, 3, 0, "Inflige {Valeur} dégats 3 fois à un ennemie. Ignore la defense ennemie")
 
 {
     public override void Utiliser(Entite utilisateur, Entite cible)

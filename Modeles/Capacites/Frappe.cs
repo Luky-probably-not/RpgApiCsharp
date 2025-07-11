@@ -2,11 +2,11 @@
 
 namespace Modeles.Capacites;
 
-public class Soin() : Capacite("Soin", 0.3f, false, true, 3, 0, "Soigne un allié de {ValeurPourcent} de ses points de vie max")
+public class Frappe() : Capacite("Frappe", 5, false, false, 0, 3, "Inflige {Valeur} dégats un ennemi")
 {
     public override void Utiliser(Entite utilisateur, Entite cible)
     {
-        cible.Soigner(Valeur);
+        cible.Blesser((int)Valeur,utilisateur.Attaque);
         utilisateur.PointAction -= Cout;
     }
 
