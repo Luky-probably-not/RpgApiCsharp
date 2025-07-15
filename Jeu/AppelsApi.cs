@@ -21,6 +21,7 @@ public class AppelsApi
     {
         HttpResponseMessage response = await Client.GetAsync($"/api/equipe");
         var equipe = await response.Content.ReadFromJsonAsync<List<Entite>>(OptionsJson);
+        equipe?.ForEach(e => e.ReinitialiserValeurAction());
         return equipe;
     }
 

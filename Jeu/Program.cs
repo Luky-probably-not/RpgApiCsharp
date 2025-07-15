@@ -1,10 +1,3 @@
-﻿using Modeles.Character.Ennemie;
-using Jeu;
-using Modeles;
-using Modeles.Capacites;
+﻿using Jeu;
 
-//GameManager.Instance.Debut(3).GetAwaiter().GetResult();
-
-var frappe = new Sacrifice();
-Console.WriteLine(frappe.Description.Length);
-frappe.SplitEveryNth(10).ForEach(Console.WriteLine);
+GameManager.Instance.Debut(3).GetAwaiter().GetResult();
