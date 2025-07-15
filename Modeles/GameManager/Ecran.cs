@@ -53,6 +53,10 @@ public class Ecran
             AjouterListe(result, length);
         }
 
+        foreach (Capacite cap in ordre[0].Capacites)
+        {
+            var desc = cap.Description;
+        }
         LigneVide();
         _ecran.Add([new("└"), new(new string('─', 50)), new("┴"), new(new string('─', 50)), new("┴"), new(new string('─', 50)), new("┘")]);
 

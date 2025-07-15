@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Modeles;
+using Modeles.Capacites;
 using Modeles.Character;
 using Modeles.Character.Personnage;
 
@@ -15,5 +17,12 @@ public class EquipeController(ILogger<EquipeController> logger) : Controller
     {
         List<Entite> equipe = [new Chevalier(), new Sorcier(), new Barbare()];
         return equipe;
+    }
+
+    [HttpGet("id")]
+    public List<Extensions.StringColorise> Get(string id)
+    {
+        var frappe = new Sacrifice();
+        return frappe.Description.SplitEveryNth(10);
     }
 }

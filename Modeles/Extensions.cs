@@ -16,6 +16,17 @@ public static class Extensions
         public int Length { get; set; } = str.Length;
         public string Str { get; set; } = color == null ? str : str.Pastel((Color)color);
         public string BaseStr { get; set; } = str;
+
+        public List<StringColorise> SplitEveryNth(int n)
+        {
+            if (BaseStr == null || n <= 0) return [];
+            List<StringColorise> liste = [];
+            for (var i = 0; i < Length; i += n)
+            {
+                liste.Add(new (Str.Substring(i, Math.Min(n, Length))));
+            }
+            return liste;
+        }
     }
 
     public static void MoveToBack<T>(this List<T> liste)
@@ -23,6 +34,23 @@ public static class Extensions
         var item = liste[0];
         liste.RemoveAt(0);
         liste.Add(item);
+    }
+
+    public static List<string> SplitEveryNth(this Capacite cap, int n)
+    {
+        var temp = cap.Description;
+        var result = string.Join("", [temp.Substring(0, temp.IndexOf("{")), temp.Substring(temp.IndexOf("}") + 1)]);
+        if (result == null || n <= 0) return [];
+        List<string> liste = [];
+        for (var i = 0; i < result.Length; i += n)
+        {
+            liste.Add(result.Substring(i, Math.Min(n, result.Length-i)));
+        }
+        Console.WriteLine(result.IndexOf("}")+1);
+        Console.WriteLine(result.Substring(0, result.IndexOf("{")));
+        Console.WriteLine(result.Substring(result.IndexOf("}")+1));
+        Console.WriteLine(string.Join("", [result.Substring(0, result.IndexOf("{")), result.Substring(result.IndexOf("}") + 1)]));
+        return liste;
     }
 
     public static JsonSerializerOptions OptionsJson { get; } = CreerOptions();
