@@ -8,7 +8,7 @@ public class AttaqueZone() : Capacite("AttaqueZone", 5, true, false, 3, 0, "Infl
 
     public override void Utiliser(Entite utilisateur, List<Entite> cibles)
     {
-        cibles.ForEach(cible => cible.Blesser((int)Valeur,utilisateur.Attaque,false));
+        cibles.ForEach(cible => cible.Blesser((int)Valeur,utilisateur,false));
         utilisateur.PointAction -= Cout;
     }
 }

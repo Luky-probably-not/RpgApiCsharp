@@ -7,7 +7,7 @@ public class Sacrifice() : Capacite("Sacrifice", 0.4f, false, false, 9, 0, "Perd
     public override void Utiliser(Entite utilisateur, Entite cible)
     {
         var degats = utilisateur.PointDeVie * Valeur;
-        cible.Blesser((int)(3 + degats),utilisateur.Attaque,false);
+        cible.Blesser((int)(3 + degats),utilisateur,false);
         utilisateur.PointDeVie -= (int)degats;
         utilisateur.PointAction -= Cout;
     }

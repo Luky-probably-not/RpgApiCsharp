@@ -36,6 +36,7 @@ public static class Extensions
         liste.Add(item);
     }
 
+    /*
     public static List<string> SplitEveryNth(this Capacite cap, int n)
     {
         var temp = cap.Description;
@@ -52,6 +53,7 @@ public static class Extensions
         Console.WriteLine(string.Join("", [result.Substring(0, result.IndexOf("{")), result.Substring(result.IndexOf("}") + 1)]));
         return liste;
     }
+    */
 
     public static JsonSerializerOptions OptionsJson { get; } = CreerOptions();
 

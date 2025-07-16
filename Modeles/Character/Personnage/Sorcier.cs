@@ -1,6 +1,4 @@
-﻿using Modeles.Capacites;
-
-namespace Modeles.Character.Personnage;
+﻿namespace Modeles.Character.Personnage;
 
 public class Sorcier : Entite
 {
@@ -9,11 +7,5 @@ public class Sorcier : Entite
         "⧶║╰-╡",
         "/ \\ │",
         "⎸ ⎹ ⤓"
-    ])
-    {
-        AjouterCapacite(new Soin());
-        AjouterCapacite(new Frappe());
-        AjouterCapacite(new Energie());
-        ReinitialiserValeurAction();
-    }
+    ]) { }
 }

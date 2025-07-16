@@ -21,8 +21,23 @@ public class AppelsApi
     {
         HttpResponseMessage response = await Client.GetAsync($"/api/equipe");
         var equipe = await response.Content.ReadFromJsonAsync<List<Entite>>(OptionsJson);
-        equipe?.ForEach(e => e.ReinitialiserValeurAction());
         return equipe;
+    }
+
+    public static async Task<List<Entite>?> GetEnnemies()
+    {
+        HttpResponseMessage response = await Client.GetAsync("api/ennemie");
+        var ennemies = await response.Content.ReadFromJsonAsync<List<Entite>>(OptionsJson);
+        ennemies!.ForEach(e => e.ReinitialiserValeurAction());
+        ennemies!.ForEach(e => e.MettreANiveau());
+        return ennemies;
+    }
+
+    public static async Task<int> GetRecompenses(int sommeNiveau)
+    {
+        HttpResponseMessage response = await Client.GetAsync($"api/loot/{sommeNiveau}");
+        var loot = await response.Content.ReadFromJsonAsync<int>();
+        return loot;
     }
 
     private static HttpClient SetupClient(string adresseApi)

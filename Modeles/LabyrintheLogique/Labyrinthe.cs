@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text.Json.Serialization;
-
-namespace Modeles.LabyrintheLogique;
+﻿namespace Modeles.LabyrintheLogique;
 
 public class Labyrinthe
 {
@@ -140,7 +137,7 @@ public class Labyrinthe
 
         Laby = copie.Laby;
         InitalialiserDebut();
-
+        GenererRencontre();
     }
 
     private void InitalialiserDebut()
@@ -268,6 +265,23 @@ public class Labyrinthe
         laby.Laby[idLig][idCol] = centre;
         laby.Laby[idLig + NS][idCol + WE] = localisation;
         return laby;
+    }
+
+    private void GenererRencontre()
+    {
+        for (var i = 0; i < Taille; i++)
+        {
+            var rand = new Random();
+            var col = rand.Next(Taille);
+            var lig = rand.Next(Taille);
+            while (Laby[col][lig].Type != " ")
+            {
+                col = rand.Next(Taille);
+                lig = rand.Next(Taille);
+            }
+
+            Laby[col][lig].Type = "E";
+        }
     }
 
     #endregion

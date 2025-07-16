@@ -4,9 +4,10 @@ namespace Modeles.Character;
 
 public abstract class Entite(string nom, int att, int def, int pv, int vitesse, List<string> sprite)
 {
-    public string Nom { get; protected set; } = nom;
+    public int Niveau { get; set; } = 1;
+    public string Nom { get; set; } = nom;
 
-    public int AttaqueDeBase {get; protected set;} = att;
+    public int AttaqueDeBase {get; set;} = att;
 
     public int Attaque
     {
@@ -16,9 +17,8 @@ public abstract class Entite(string nom, int att, int def, int pv, int vitesse, 
             var attNerf = Malus.Find(m => m.Nom == "Attaque")?.Valeur ?? 1;
             return (int)(AttaqueDeBase * attBuff * attNerf);
         }
-        private set { }
     }
-    public int DefenseDeBase {get; protected set;} = def;
+    public int DefenseDeBase {get; set; } = def;
 
     public int Defense
     {
@@ -31,9 +31,9 @@ public abstract class Entite(string nom, int att, int def, int pv, int vitesse, 
         private set{ }
     }
     public int PointDeVie {get; set;} = pv;
-    public int PointDeVieMax {get; protected set;} = pv;
+    public int PointDeVieMax {get; set; } = pv;
     public int Vitesse {get; set;} = vitesse;
-    public bool Vivant { get; protected set; } = true;
+    public bool Vivant { get; set; } = true;
 
     private int _valeurAction;
 
@@ -43,18 +43,46 @@ public abstract class Entite(string nom, int att, int def, int pv, int vitesse, 
         set => _valeurAction = Math.Max(0, value);
     }
 
-    public int PointAction { get; set; } = 5;
-    public List<string> Sprite { get; protected set; } = sprite;
-    public List<Capacite> Capacites { get; protected set; } = [];
+    protected int _pointAction = 5;
+
+    public int PointAction 
+    {
+        get => _pointAction;
+        set => _pointAction = Math.Clamp(value,0,10);
+    }
+    public List<string> Sprite { get; set; } = sprite;
+    public List<Capacite> Capacites { get; set; } = [];
 
     public List<BonusMalus> Bonus = [];
     public List<BonusMalus> Malus = [];
 
-    public void Blesser(int puissanceAttaque, int attaqueAssaillant, bool ignoreDefense = false)
+    public void MettreANiveau()
     {
-        var degats = puissanceAttaque * attaqueAssaillant;
+        PointDeVie = (int)Math.Round(PointDeVie * (1f + Niveau / 10f));
+        PointDeVieMax = (int)Math.Round(PointDeVieMax * (1f + Niveau / 10f));
+        AttaqueDeBase = (int)Math.Round(AttaqueDeBase * (1f + Niveau / 10f));
+        DefenseDeBase = (int)Math.Round(DefenseDeBase * (1f + Niveau / 10f));
+    }
+
+    public void Blesser(int puissanceAttaque, Entite assailant, bool ignoreDefense = false)
+    {
+        var degats = puissanceAttaque + assailant.Attaque;
         if (!ignoreDefense)
-            degats /= (Defense + 10) / 10;
+            degats -= (Defense + 10) / 10;
+        var buffs = assailant.Bonus;
+        var doubleDegats = buffs.Find(e => e.Nom == "DoubleDegats");
+        if (doubleDegats != null)
+        {
+            degats *= 2;
+            assailant.Bonus.Remove(doubleDegats);
+        }
+
+        var nerfs = Bonus.Find(e => e.Nom == "DiviseDegats");
+        if (nerfs != null)
+        {
+            degats /= 2;
+            Bonus.Remove(nerfs);
+        }
         PointDeVie = Math.Max(0, PointDeVie - degats);
         if (PointDeVie == 0)
             Vivant = false;
@@ -89,5 +117,19 @@ public abstract class Entite(string nom, int att, int def, int pv, int vitesse, 
     {
         if (Capacites.Count != 3)
             Capacites.Add(capacite);
+    }
+
+    public void FinTour()
+    {
+        BonusMalusTour();
+        ReinitialiserValeurAction();
+    }
+
+    public void FinCombat()
+    {
+        Bonus = [];
+        Malus = [];
+        PointAction = 5;
+        ReinitialiserValeurAction();
     }
 }

@@ -9,12 +9,7 @@ public class Zombie : Entite, IAction
         "   ☺ ",
         "   #*",
         "  // "
-    ])
-    {
-        AjouterCapacite(new Frappe());
-        AjouterCapacite(new AttaqueZone());
-        ReinitialiserValeurAction();
-    }
+    ]) { }
 
     public Capacite ChoisirCapacite()
     {

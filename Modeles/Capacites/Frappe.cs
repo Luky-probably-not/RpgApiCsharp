@@ -6,8 +6,9 @@ public class Frappe() : Capacite("Frappe", 5, false, false, 0, 3, "Inflige {Vale
 {
     public override void Utiliser(Entite utilisateur, Entite cible)
     {
-        cible.Blesser((int)Valeur,utilisateur.Attaque);
+        cible.Blesser((int)Valeur,utilisateur);
         utilisateur.PointAction -= Cout;
+        utilisateur.PointAction += Gain;
     }
 
     public override void Utiliser(Entite utilisateur, List<Entite> cibles){ }

@@ -1,17 +1,11 @@
-﻿using Modeles.Capacites;
-namespace Modeles.Character.Personnage;
+﻿namespace Modeles.Character.Personnage;
 
 public class Barbare : Entite
 {
-    public Barbare() : base("Barbare", 20, 5, 50, 120, [
+    public Barbare() : base("Barbare", 20, 5, 100, 120, [
         " +−+♃",
         " |⎉| ",
         "  ⧋  ",
         " / \\ "
-    ])
-    {
-        AjouterCapacite(new Frappe());
-        AjouterCapacite(new MultiCoup());
-        AjouterCapacite(new Sacrifice());
-    }
+    ]) { }
 }

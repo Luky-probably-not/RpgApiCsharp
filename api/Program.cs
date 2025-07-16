@@ -1,10 +1,5 @@
-using Microsoft.AspNetCore.StaticFiles.Infrastructure;
-using Microsoft.Extensions.Options;
 using Modeles;
-using Modeles.Character;
-using Modeles.Character.Personnage;
-using System.Text.Json.Serialization;
-using System.Text.Json.Serialization.Metadata;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -45,4 +40,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+Console.WriteLine("http://localhost:5019/swagger/index.html");
 app.Run();

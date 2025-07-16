@@ -1,25 +1,18 @@
-﻿using System;
-using Modeles.LabyrintheLogique;
+﻿using Modeles.LabyrintheLogique;
 
 namespace Modeles.GameManager;
 
 public static class LabyrintheJeu
 {
-    private static Labyrinthe Laby;
+    private static Labyrinthe Laby = new(1);
     private static int PosColonne;
     private static int PosLigne;
 
-    public static void PlayLabyrinthe(Labyrinthe laby)
+    public static bool Deplacement(Labyrinthe laby, out string cell)
     {
         Laby = laby;
-        var arrive = false;
-        while (!arrive)
-        {
-            Laby.Display();
-            PositionJoueur();
-            arrive = Pas(RecupererInput());
-        }
-        Laby.Display();
+        PositionJoueur();
+        return Pas(RecupererInput(), out cell);
     }
 
     private static void PositionJoueur()
@@ -28,7 +21,7 @@ public static class LabyrintheJeu
         {
             for (var f = 0; f < Laby.Taille; f++)
             {
-                if (Laby.Laby[i][f].Type != "P") continue;
+                if (Laby.Laby[i][f].Type != "⚗") continue;
                 PosColonne = f;
                 PosLigne = i;
                 return;
@@ -70,7 +63,7 @@ public static class LabyrintheJeu
         };
     }
 
-    private static bool Pas(ConsoleKey touche)
+    private static bool Pas(ConsoleKey touche, out string cell)
     {
         var NS = touche switch
         {
@@ -85,8 +78,9 @@ public static class LabyrintheJeu
             _ => 0
         };
         Laby.Laby[PosLigne][PosColonne].Type = " ";
-        bool verif = Laby.Laby[PosLigne + NS][PosColonne + WE].Type == "B";
-        Laby.Laby[PosLigne + NS][PosColonne + WE].Type = "P";
+        var verif = Laby.Laby[PosLigne + NS][PosColonne + WE].Type == "B";
+        cell = Laby.Laby[PosLigne + NS][PosColonne + WE].Type!;
+        Laby.Laby[PosLigne + NS][PosColonne + WE].Type = "⚗";
         return verif;
     }
 }

@@ -9,7 +9,7 @@ public class MultiCoup() : Capacite("MultiCoup", 3, false, false, 3, 0, "Inflige
     {
         for (var i = 0; i < 3; i++)
         {
-            cible.Blesser((int)Valeur,utilisateur.Attaque,true);
+            cible.Blesser((int)Valeur,utilisateur,true);
         }
         utilisateur.PointAction -= Cout;
     }

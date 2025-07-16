@@ -1,3 +1,3 @@
 ﻿using Jeu;
 
-GameManager.Instance.Debut(3).GetAwaiter().GetResult();
+GameManager.Instance.Debut(5).GetAwaiter().GetResult();
