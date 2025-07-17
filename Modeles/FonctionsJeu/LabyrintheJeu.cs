@@ -1,6 +1,6 @@
 ﻿using Modeles.LabyrintheLogique;
 
-namespace Modeles.GameManager;
+namespace Modeles.FonctionsJeu;
 
 public static class LabyrintheJeu
 {

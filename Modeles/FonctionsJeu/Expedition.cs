@@ -1,6 +1,7 @@
 ﻿using Modeles.Character;
 using Modeles.Objets;
-namespace Modeles.GameManager;
+
+namespace Modeles.FonctionsJeu;
 
 public class Expedition
 {

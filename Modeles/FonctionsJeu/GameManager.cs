@@ -1,10 +1,9 @@
 ﻿using Modeles.Capacites;
 using Modeles.Character;
 using Modeles.Character.Ennemie;
-using Modeles.GameManager;
 using Modeles.LabyrintheLogique;
-using static Modeles.GameManager.LabyrintheJeu;
-namespace Jeu;
+using static Modeles.FonctionsJeu.LabyrintheJeu;
+namespace Modeles.FonctionsJeu;
 
 public class GameManager
 {

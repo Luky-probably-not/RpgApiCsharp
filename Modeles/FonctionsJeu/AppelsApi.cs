@@ -1,10 +1,9 @@
-﻿using Modeles.Character;
-using Modeles.LabyrintheLogique;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using static Modeles.Extensions;
-
-namespace Jeu;
+using Modeles.Character;
+using Modeles.LabyrintheLogique;
+using static Modeles.Json.Options;
+namespace Modeles.FonctionsJeu;
 
 public class AppelsApi
 {

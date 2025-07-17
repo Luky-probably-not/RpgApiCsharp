@@ -1,9 +1,9 @@
-﻿using Modeles.Character;
-using System.Drawing;
+﻿using System.Drawing;
 using Modeles.Capacites;
+using Modeles.Character;
 using static Modeles.Extensions;
 
-namespace Modeles.GameManager;
+namespace Modeles.FonctionsJeu;
 
 public class Ecran
 {
@@ -78,6 +78,8 @@ public class Ecran
             result.Add(new("│"));
             AjouterListe(result, length, false);
         }
+        AffichageDescriptionCapacite().ForEach(l => AjouterListe(l,_ecran.Count,false));
+
         ligne = [new("│")];
         for (var a = 0; a < 3; a++)
         {
@@ -91,6 +93,22 @@ public class Ecran
         _ecran.Add([new("└"), new(new string('─', 50)), new("┴"), new(new string('─', 50)), new("┴"), new(new string('─', 50)), new("┘")]);
 
 
+    }
+
+    private List<List<StringColorise>> AffichageDescriptionCapacite()
+    {
+        List<List<StringColorise>> result = [[], [], []];
+        foreach (var cap in ordre[0].Capacites)
+        {
+            var lignes = cap.SplitEveryNth(30);
+            for (var l = 0; l < lignes.Count; l++)
+            {
+                result[l].AddRange([new (ordre[0].Capacites.IndexOf(cap) == ChoixAction ? "│ " : "  "),new (lignes[l].FirstOrDefault().Value)]);
+                result[l].AddRange([new StringColorise(new string(' ', 47 - lignes[l].FirstOrDefault().Key)), new(ordre[0].Capacites.IndexOf(cap) == ChoixAction ? "│" : " "), new  (ordre[0].Capacites.IndexOf(cap) != 2 ? "│" : " ")]);
+            }
+        }
+
+        return result;
     }
 
     private StringColorise AffichagePointActionCapacite(Capacite cap)
