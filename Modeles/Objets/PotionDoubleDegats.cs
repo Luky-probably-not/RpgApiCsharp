@@ -2,7 +2,7 @@
 
 namespace Modeles.Objets;
 
-public class PotionDoubleDegats() : Objet("Potion de Dégats", 0, "Double les dégats de la prochaine attaque")
+public class PotionDoubleDegats() : Objet("Potion de Dégats", 1f, "La prochaine attaque inflige +{ValeurPourcent} de dégats supplémentaire", false)
 {
     public override void Utiliser(Entite cible)
     {

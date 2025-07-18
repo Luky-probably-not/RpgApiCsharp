@@ -2,7 +2,7 @@
 
 namespace Modeles.Objets;
 
-public class PotionSoin() : Objet("Potion de Soin", 0.7f, "Rend {ValeurPourcent} des points de vie max d'une cible")
+public class PotionSoin() : Objet("Potion de Soin", 0.7f, "Rend {ValeurPourcent} des points de vie max d'une cible", false)
 {
     public override void Utiliser(Entite cible)
     {

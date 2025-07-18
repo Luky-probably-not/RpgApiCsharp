@@ -1,7 +1,9 @@
-﻿using Modeles.Capacites;
+﻿using System.Diagnostics;
+using Modeles.Capacites;
 using Modeles.Character;
 using Modeles.Character.Ennemie;
 using Modeles.LabyrintheLogique;
+using Modeles.Objets;
 using static Modeles.FonctionsJeu.LabyrintheJeu;
 namespace Modeles.FonctionsJeu;
 
@@ -9,19 +11,15 @@ public class GameManager
 {
     private static GameManager? _instance = null;
 
-    private Expedition expedition;
+    public Expedition expedition;
     private Ecran Ecran;
 
     private GameManager()
     {
+        expedition = new() { Equipe = [] };
         Ennemies = [];
         OrdreAction = [];
-        Ecran = new Ecran
-        {
-            equipe = [],
-            ennemies = [],
-            ordre = []
-        };
+        Ecran = new Ecran();
     }
 
     public static GameManager Instance
@@ -36,12 +34,9 @@ public class GameManager
     public List<Entite> Ennemies { get; set; }
     public List<Entite> OrdreAction { get; set; }
 
-    public void Setup(List<Entite> equipe, List<Entite> ennemies)
+    public void Setup(Expedition expe, List<Entite> ennemies)
     {
-        expedition = new()
-        {
-            Equipe = equipe,
-        };
+        expedition = expe;
         Ennemies = ennemies;
         RecupererOrdreAction();
     }
@@ -49,11 +44,11 @@ public class GameManager
     public async Task Debut(int tailleLaby)
     {
         var laby = await AppelsApi.GetLabyrinthe(tailleLaby);
-        var equipe = await AppelsApi.GetEquipe();
+        var expe = await AppelsApi.GetExpedition();
         var ennemies = await AppelsApi.GetEnnemies();
-        if (laby == null || equipe == null || ennemies == null)
+        if (laby == null || expe == null || ennemies == null)
             Environment.Exit(1);
-        Setup(equipe, ennemies);
+        Setup(expe, ennemies);
         Play(laby);
 
     }
@@ -64,7 +59,6 @@ public class GameManager
         while (!arrive)
         {
             laby.Display();
-            Console.WriteLine(expedition.Pieces + " pieces");
             arrive = Deplacement(laby, out var cell);
             if (cell == "E")
                 Combat().GetAwaiter().GetResult();
@@ -96,6 +90,8 @@ public class GameManager
                 continue;
             }
             MajEcran();
+            Ecran.ChoixAction = "";
+            Ecran.ChoixCapacite = 0;
             Ecran.Afficher();
             if (Ennemies.Contains(OrdreAction[0]))
             {
@@ -105,18 +101,57 @@ public class GameManager
                 Thread.Sleep(1000);
                 continue;
             }
-            var cap = ChoixCapacite();
-            var cibles = ChoixCible(cap);
-            if (cap.Zone)
-                cap.Utiliser(expedition.Equipe.Find(e => e == OrdreAction[0])!, cibles);
-            else
-                cap.Utiliser(expedition.Equipe.Find(e => e == OrdreAction[0])!, cibles[0]);
+
+            List<Entite> cibles;
+            var action = true;
+            while (action)
+            {
+                var choix = ChoixAction();
+                switch (choix)
+                {
+                    case 0:
+                        MajEcran();
+                        Ecran.ChoixAction = nameof(Capacite);
+                        Ecran.ChoixCapacite = 0;
+                        Ecran.Afficher();
+                        var cap = ChoixCapacite();
+                        if (cap == null)
+                            continue;
+                        cibles = ChoixCible(cap);
+                        if (cap.Zone)
+                            cap.Utiliser(expedition.Equipe.Find(e => e == OrdreAction[0])!, cibles);
+                        else
+                            cap.Utiliser(expedition.Equipe.Find(e => e == OrdreAction[0])!, cibles[0]);
+                        action = false;
+                        break;
+                    case 1:
+                        MajEcran();
+                        Ecran.ChoixAction = nameof(Objet);
+                        Ecran.ChoixObjet = 0;
+                        Ecran.Afficher();
+                        var obj = ChoixObjet();
+                        if (obj == null)
+                            continue;
+                        cibles = ChoixCible(obj);
+                        if (obj.Zone)
+                            obj.Utiliser(cibles);
+                        else
+                            obj.Utiliser(cibles[0]);
+                        action = false;
+                        break;
+                    case 2:
+                        expedition.Equipe.Find(e => e == OrdreAction[0])!.FinTour();
+                        continue;
+                }
+            }
+            
+
             expedition.Equipe.Find(e => e == OrdreAction[0])!.FinTour();
         }
         MajEcran();
         Ecran.Afficher();
         expedition.Equipe.ForEach(e => e.FinCombat());
-        expedition.Pieces += await AppelsApi.GetRecompenses(Ennemies.Sum(e => e.Niveau));
+        expedition.Recompense(await AppelsApi.GetRecompenses(Ennemies.Sum(e => e.Niveau)));
     }
 
     private bool VerifierVivant()
@@ -131,21 +166,24 @@ public class GameManager
         var entite = OrdreAction[0];
         var cap = (entite as IAction)!.ChoisirCapacite();
         var rand = new Random();
+        List<Entite> cibleValide;
         switch (cap)
         {
             case { Zone: true }:
                 cap.Utiliser(entite, expedition.Equipe);
                 break;
             case { Zone: false, Allie: true }:
-                cap.Utiliser(entite, Ennemies[rand.Next(Ennemies.Count)]);
+                cibleValide = [.. Ennemies.Where(e => e.Vivant)];
+                cap.Utiliser(entite, cibleValide[rand.Next(cibleValide.Count)]);
                 break;
             case { Zone: false, Allie: false }:
-                cap.Utiliser(entite, expedition.Equipe[rand.Next(expedition.Equipe.Count)]);
+                cibleValide = [.. expedition.Equipe.Where(e => e.Vivant)];
+                cap.Utiliser(entite, cibleValide[rand.Next(cibleValide.Count)]);
                 break;
         }
     }
 
-    public Capacite ChoixCapacite()
+    public int ChoixAction()
     {
         var choix = 0;
         List<ConsoleKey> toucheValide =
@@ -155,6 +193,9 @@ public class GameManager
             ConsoleKey.Spacebar
         ];
         ConsoleKey touche = ConsoleKey.A;
+        MajEcran();
+        Ecran.ChoixAction = "";
+        Ecran.Afficher();
         while (touche != ConsoleKey.Spacebar)
         {
             touche = Console.ReadKey().Key;
@@ -168,10 +209,88 @@ public class GameManager
             if (choix > 2) choix -= 3;
             if (choix < 0) choix += 3;
             MajEcran();
-            Ecran.ChoixAction = choix;
+            Ecran.ChoixCapacite = choix;
             Ecran.Afficher();
         }
-        return OrdreAction[0].Capacites[choix];
+        return choix;
+    }
+
+    public Objet? ChoixObjet()
+    {
+        var choix = 0;
+        List<ConsoleKey> toucheValide =
+        [
+            ConsoleKey.LeftArrow,
+            ConsoleKey.RightArrow,
+            ConsoleKey.Spacebar,
+            ConsoleKey.Escape
+        ];
+        var touche = ConsoleKey.A;
+        var objetPossede = false;
+        while ((touche != ConsoleKey.Spacebar && touche != ConsoleKey.Escape) || !objetPossede)
+        {
+            touche = Console.ReadKey().Key;
+            if (!toucheValide.Contains(touche)) continue;
+            choix += touche switch
+            {
+                ConsoleKey.RightArrow => 1,
+                ConsoleKey.LeftArrow => -1,
+                _ => 0
+            };
+            if (choix > 5) choix -= 6;
+            if (choix < 0) choix += 6;
+            MajEcran();
+            Ecran.ChoixObjet = choix;
+            Ecran.ChoixAction = nameof(Objet);
+            objetPossede = expedition.Sac[Expedition.IndexObjet[choix]] > 0;
+            if (touche == ConsoleKey.Escape)
+                break;
+            Ecran.Afficher();
+        }
+
+        return touche == ConsoleKey.Escape ? null : Expedition.IndexObjet[choix] switch
+        {
+            nameof(PotionSoin) => new PotionSoin(),
+            nameof(PotionEnergie) => new PotionEnergie(),
+            nameof(AttaqueBoost) => new AttaqueBoost(),
+            nameof(DefenseBoost) => new DefenseBoost(),
+            nameof(PotionDoubleDegats) => new PotionDoubleDegats(),
+            nameof(PotionReductionDegats) => new PotionReductionDegats(),
+            _ => throw new NotImplementedException()
+        };
+    }
+
+    public Capacite? ChoixCapacite()
+    {
+        var choix = 0;
+        List<ConsoleKey> toucheValide =
+        [
+            ConsoleKey.LeftArrow,
+            ConsoleKey.RightArrow,
+            ConsoleKey.Spacebar,
+            ConsoleKey.Escape
+        ];
+        var touche = ConsoleKey.A;
+        var energie = false;
+        while ((touche != ConsoleKey.Spacebar && touche != ConsoleKey.Escape) || !energie )
+        {
+            touche = Console.ReadKey().Key;
+            if (!toucheValide.Contains(touche)) continue;
+            choix += touche switch
+            {
+                ConsoleKey.RightArrow => 1,
+                ConsoleKey.LeftArrow => -1,
+                _ => 0
+            };
+            if (choix > 2) choix -= 3;
+            if (choix < 0) choix += 3;
+            MajEcran();
+            Ecran.ChoixCapacite = choix;
+            Ecran.ChoixAction = nameof(Capacite);
+            energie = OrdreAction[0].PointAction - OrdreAction[0].Capacites[choix].Cout > 0;
+            Ecran.Afficher();
+        }
+        return touche == ConsoleKey.Escape ? null : OrdreAction[0].Capacites[choix];
     }
 
     public List<Entite> ChoixCible(Capacite cap)
@@ -183,27 +302,23 @@ public class GameManager
             ConsoleKey.RightArrow,
             ConsoleKey.Spacebar
         ];
-        ConsoleKey touche = ConsoleKey.A;
-        while (touche != ConsoleKey.Spacebar)
+        var touche = ConsoleKey.A;
+        var cibleVivante = false;
+        while (touche != ConsoleKey.Spacebar || !cibleVivante)
         {
             if (choix > 2) choix -= 3;
             if (choix < 0) choix += 3;
             MajEcran();
-            switch (cap)
+            Ecran.Cibles = cap switch
             {
-                case { Allie: true, Zone: true }:
-                    Ecran.Cibles = expedition.Equipe;
-                    break;
-                case { Allie: true, Zone: false }:
-                    Ecran.Cibles = [expedition.Equipe[choix]];
-                    break;
-                case { Allie: false, Zone: true }:
-                    Ecran.Cibles = Ennemies;
-                    break;
-                case { Allie: false, Zone: false }:
-                    Ecran.Cibles = [Ennemies[choix]];
-                    break;
-            }
+                { Allie: true, Zone: true } => expedition.Equipe,
+                { Allie: true, Zone: false } => [expedition.Equipe[choix]],
+                { Allie: false, Zone: true } => Ennemies,
+                { Allie: false, Zone: false } => [Ennemies[choix]],
+                _ => Ecran.Cibles
+            };
+            cibleVivante = Ecran.Cibles.Any(e => e.Vivant);
+            Ecran.ChoixAction = nameof(Capacite);
             Ecran.Afficher();
             touche = Console.ReadKey().Key;
             if (!toucheValide.Contains(touche)) continue;
@@ -217,13 +332,44 @@ public class GameManager
         return Ecran.Cibles;
     }
 
+    public List<Entite> ChoixCible(Objet obj)
+    {
+        var choix = 0;
+        List<ConsoleKey> toucheValide =
+        [
+            ConsoleKey.LeftArrow,
+            ConsoleKey.RightArrow,
+            ConsoleKey.Spacebar
+        ];
+        var touche = ConsoleKey.A;
+        while (touche != ConsoleKey.Spacebar)
+        {
+            if (choix > 2) choix -= 3;
+            if (choix < 0) choix += 3;
+            MajEcran();
+            Ecran.Cibles = obj.Zone ? expedition.Equipe : [expedition.Equipe[choix]];
+            Ecran.ChoixAction = nameof(Objet);
+            Ecran.Afficher();
+            touche = Console.ReadKey().Key;
+            if (!toucheValide.Contains(touche)) continue;
+            choix += touche switch
+            {
+                ConsoleKey.RightArrow => 1,
+                ConsoleKey.LeftArrow => -1,
+                _ => 0
+            };
+        }
+
+        return Ecran.Cibles;
+    }
+
     private void MajEcran()
     {
         Ecran =  new Ecran()
         {
-            equipe = expedition.Equipe,
-            ennemies = Ennemies,
-            ordre = OrdreAction
+            Expedition = expedition,
+            Ennemies = Ennemies,
+            Ordre = OrdreAction,
         };
     }
 

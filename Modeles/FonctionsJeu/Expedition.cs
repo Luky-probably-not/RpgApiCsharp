@@ -5,18 +5,39 @@ namespace Modeles.FonctionsJeu;
 
 public class Expedition
 {
-    public required List<Entite> Equipe;
-    public int Pieces = 0;
-    public Dictionary<Objet, int> Sac = InitialiserSac();
+    public required List<Entite> Equipe { get; set; }
+    public int Pieces { get; set; }= 0;
+    public Dictionary<string, int> Sac { get; set; } = InitialiserSac();
 
-    private static Dictionary<Objet, int> InitialiserSac()
+    public static readonly List<string> IndexObjet =
+    [
+        nameof(PotionSoin), nameof(PotionEnergie), nameof(AttaqueBoost), nameof(DefenseBoost),
+        nameof(PotionDoubleDegats), nameof(PotionReductionDegats)
+    ];
+
+    private static Dictionary<string, int> InitialiserSac()
     {
-        return new Dictionary<Objet, int>()
+        return new Dictionary<string, int>()
         {
-            { new PotionSoin(), 1 },
-            { new PotionEnergie(), 1 },
-            { new AttaqueBoost(), 1 },
-            { new DefenseBoost(), 1 }
+            { nameof(PotionSoin), 0 },
+            { nameof(PotionEnergie), 0 },
+            { nameof(AttaqueBoost), 0 },
+            { nameof(DefenseBoost), 0 },
+            { nameof(PotionDoubleDegats), 0},
+            { nameof(PotionReductionDegats), 0 },
         };
+    }
+
+    public void Recompense(Dictionary<string, int> loot)
+    {
+        foreach (var kvp in loot)
+        {
+            if (kvp.Key == "Pieces")
+            {
+                Pieces += kvp.Value;
+                continue;
+            }
+            Sac[kvp.Key] += kvp.Value;
+        }
     }
 }

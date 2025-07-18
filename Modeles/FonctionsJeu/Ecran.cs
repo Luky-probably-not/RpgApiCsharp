@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using Modeles.Capacites;
 using Modeles.Character;
+using Modeles.Objets;
 using static Modeles.Extensions;
 
 namespace Modeles.FonctionsJeu;
@@ -9,11 +10,14 @@ public class Ecran
 {
     private List<List<StringColorise>> _ecran = [[new StringColorise("┌" + string.Concat(Enumerable.Repeat("─", 153)) + "┐")]];
 
-    public required List<Entite> equipe;
-    public required List<Entite> ennemies;
-    public required List<Entite> ordre;
-    public int ChoixAction;
+    public Expedition Expedition = new(){Equipe = [] };
+    public List<Entite> Ennemies = [];
+    public List<Entite> Ordre = [];
+    public int ChoixCapacite;
+    public int ChoixObjet;
+    public string ChoixAction ="";
     public List<Entite> Cibles = [];
+    public List<String> Actions = ["Capacites", "Objets", "Passer le tour"];
 
     public void Afficher()
     {
@@ -21,17 +25,82 @@ public class Ecran
         _ecran = [[new StringColorise("┌" + new string('─', 152) + "┐")]];
         
         AfficherOrdre();
-        AfficherCote(ennemies,2);
-        AfficherCote(equipe,14);
-        AfficherCapacite();
+        AfficherCote(Ennemies,2);
+        AfficherCote(Expedition.Equipe,14);
+        switch (ChoixAction)
+        {
+            case nameof(Capacite):
+                AfficherCapacite();
+                break;
+            case nameof(Objet):
+                AfficherObjet();
+                break;
+            case "":
+                AfficherAction();
+                break;
+        }
         _ecran.ForEach(e => Console.WriteLine(FormatterLigne(e)));
     }
 
     #region ValeurEcran
 
+    private void AfficherAction()
+    {
+        _ecran.Add([
+            new("├"), new(new string('─', 50)), new("┬"), new(new string('─', 50)), new("┬"), new(new string('─', 50)),
+            new("┤")
+        ]);
+        List<StringColorise> ligne = [new("│")];
+        for (var a = 0; a < 3; a++)
+        {
+            if (a == ChoixCapacite)
+                ligne.AddRange([new("┌"), new(new string('─', 48)), new("┐")]);
+            else
+                ligne.AddRange([new(new string(' ', 50))]);
+            ligne.Add(new("│"));
+        }
+        _ecran.Add(ligne);
+
+        ligne = [];
+        foreach (var action in Actions)
+        {
+            if (Actions.IndexOf(action) == ChoixCapacite)
+                ligne.AddRange([new("│"), new(MettreAuMilieu(action, 48)), new("│")]);
+            else
+                ligne.AddRange([new(MettreAuMilieu(action, 50))]);
+            ligne.Add(new ("│"));
+        }
+        AjouterListe(ligne, _ecran.Count, false);
+        var length = _ecran.Count;
+        for (var b = 0; b < 4; b++)
+        {
+            ligne = [new("│")];
+            for (var a = 0; a < 3; a++)
+            {
+                if (a == ChoixCapacite)
+                    ligne.AddRange([new("│"), new(new string(' ', 48)), new("│")]);
+                else
+                    ligne.AddRange([new(new string(' ', 50))]);
+                ligne.Add(new("│"));
+            }
+            _ecran.Add(ligne);
+        }
+        ligne = [new("│")];
+        for (var a = 0; a < 3; a++)
+        {
+            if (a == ChoixCapacite)
+                ligne.AddRange([new("└"), new(new string('─', 48)), new("┘")]);
+            else
+                ligne.AddRange([new(new string(' ', 50))]);
+            ligne.Add(new("│"));
+        }
+        _ecran.Add(ligne);
+        _ecran.Add([new("└"), new(new string('─', 50)), new("┴"), new(new string('─', 50)), new("┴"), new(new string('─', 50)), new("┘")]);
+    }
+
     private void AfficherCapacite()
     {
-        if (!equipe.Contains(ordre[0]))
+        if (!Expedition.Equipe.Contains(Ordre[0]))
             return;
         _ecran.Add([
             new("├"), new(new string('─', 50)), new("┬"), new(new string('─', 50)), new("┬"), new(new string('─', 50)),
@@ -40,7 +109,7 @@ public class Ecran
         List<StringColorise> ligne = [new("│")];
         for (var a = 0; a < 3; a++)
         {
-            if (a == ChoixAction)
+            if (a == ChoixCapacite)
                 ligne.AddRange([new ("┌"), new (new string('─',48)), new ("┐")]);
             else
                 ligne.AddRange([new (new string(' ', 50))]);
@@ -49,9 +118,9 @@ public class Ecran
         _ecran.Add(ligne);
 
         List<StringColorise> result = [];
-        foreach (Capacite cap in ordre[0].Capacites)
+        foreach (var cap in Ordre[0].Capacites)
         {
-            if (ordre[0].Capacites.IndexOf(cap) == ChoixAction)
+            if (Ordre[0].Capacites.IndexOf(cap) == ChoixCapacite)
                 result.AddRange([new ("│"),new(MettreAuMilieu(cap.Nom, 48)), new ("│")]);
             else
                 result.Add(new(MettreAuMilieu(cap.Nom, 50)));
@@ -59,10 +128,10 @@ public class Ecran
         }
         AjouterListe(result, _ecran.Count, false );
         var length = _ecran.Count;
-        foreach (var cap in ordre[0].Capacites)
+        foreach (var cap in Ordre[0].Capacites)
         {
             result = [];
-            if (ordre[0].Capacites.IndexOf(cap) == ChoixAction)
+            if (Ordre[0].Capacites.IndexOf(cap) == ChoixCapacite)
                 result.AddRange([
                     new ("│"),
                     new(new string(' ', 38)),
@@ -83,7 +152,7 @@ public class Ecran
         ligne = [new("│")];
         for (var a = 0; a < 3; a++)
         {
-            if (a == ChoixAction)
+            if (a == ChoixCapacite)
                 ligne.AddRange([new("└"), new(new string('─', 48)), new("┘")]);
             else
                 ligne.AddRange([new(new string(' ', 50))]);
@@ -91,20 +160,112 @@ public class Ecran
         }
         _ecran.Add(ligne);
         _ecran.Add([new("└"), new(new string('─', 50)), new("┴"), new(new string('─', 50)), new("┴"), new(new string('─', 50)), new("┘")]);
+    }
 
+    private void AfficherObjet()
+    {
+        if (!Expedition.Equipe.Contains(Ordre[0]))
+            return;
+        _ecran.Add([
+            new("├"), new(new string('─', 50)), new("┬"), new(new string('─', 50)), new("┬"), new(new string('─', 50)),
+            new("┤")
+        ]);
+        List<StringColorise> ligne = [new("│")];
+        for (var a = 0; a < 3; a++)
+        {
+            if (a == (ChoixObjet > 2 ? ChoixObjet - 3 : ChoixObjet))
+                ligne.AddRange([new("┌"), new(new string('─', 48)), new("┐")]);
+            else
+                ligne.Add(new(new string(' ', 50)));
+            ligne.Add(new("│"));
+        }
 
+        _ecran.Add(ligne);
+
+        ligne = [];
+        foreach (var obj in Expedition.IndexObjet.GetRange(ChoixObjet > 2 ? 3 : 0, 3))
+        {
+            if (Expedition.IndexObjet[ChoixObjet] == obj)
+                ligne.AddRange([
+                    new("│"),
+                    new(MettreAuMilieu(Objet.ObjetParNom(obj).Nom, 48)),
+                    new("│")
+                ]);
+            else
+                ligne.Add(new(MettreAuMilieu(Objet.ObjetParNom(obj).Nom, 50)));
+            ligne.Add(new("│"));
+        }
+
+        AjouterListe(ligne, _ecran.Count, false);
+        var length = _ecran.Count;
+        foreach (var obj in Expedition.IndexObjet.GetRange(ChoixObjet > 2 ? 3 : 0, 3))
+        {
+            ligne = [];
+            if (Expedition.IndexObjet[ChoixObjet] == obj)
+                ligne.AddRange([
+                    new("│"),
+                    new(new string(' ', 38)),
+                    AffichageQuantiteObjet(obj),
+                    new("│"),
+                ]);
+            else
+                ligne.AddRange([
+                    new(new string(' ', 39)),
+                    AffichageQuantiteObjet(obj),
+                    new(" ")
+                ]);
+            ligne.Add(new("│"));
+            AjouterListe(ligne, length, false);
+        }
+        AffichageDescriptionObjet().ForEach(l => AjouterListe(l, _ecran.Count, false));
+
+        ligne = [new("│")];
+        for (var a = 0; a < 3; a++)
+        {
+            if (a == (ChoixObjet > 2 ? ChoixObjet - 3 : ChoixObjet))
+                ligne.AddRange([new("└"), new(new string('─', 48)), new("┘")]);
+            else
+                ligne.Add(new(new string(' ', 50)));
+            ligne.Add(new("│"));
+        }
+
+        _ecran.Add(ligne);
+        _ecran.Add([new("└"), new(new string('─', 50)), new("┴"), new(new string('─', 50)), new("┴"), new(new string('─', 50)), new("┘")]);
     }
 
     private List<List<StringColorise>> AffichageDescriptionCapacite()
     {
         List<List<StringColorise>> result = [[], [], []];
-        foreach (var cap in ordre[0].Capacites)
+        foreach (var cap in Ordre[0].Capacites)
         {
             var lignes = cap.SplitEveryNth(30);
             for (var l = 0; l < lignes.Count; l++)
             {
-                result[l].AddRange([new (ordre[0].Capacites.IndexOf(cap) == ChoixAction ? "│ " : "  "),new (lignes[l].FirstOrDefault().Value)]);
-                result[l].AddRange([new StringColorise(new string(' ', 47 - lignes[l].FirstOrDefault().Key)), new(ordre[0].Capacites.IndexOf(cap) == ChoixAction ? "│" : " "), new  (ordre[0].Capacites.IndexOf(cap) != 2 ? "│" : " ")]);
+                result[l].AddRange([new (Ordre[0].Capacites.IndexOf(cap) == ChoixCapacite ? "│ " : "  "),new (lignes[l].FirstOrDefault().Value)]);
+                result[l].AddRange([new StringColorise(new string(' ', 47 - lignes[l].FirstOrDefault().Key)), new(Ordre[0].Capacites.IndexOf(cap) == ChoixCapacite ? "│" : " "), new  (Ordre[0].Capacites.IndexOf(cap) != 2 ? "│" : " ")]);
+            }
+        }
+
+        return result;
+    }
+
+    private List<List<StringColorise>> AffichageDescriptionObjet()
+    {
+        List<List<StringColorise>> result = [[], [], []];
+        foreach (var obj in Expedition.IndexObjet.GetRange(ChoixObjet > 2 ? 3 : 0, 3))
+        {
+            var lignes = Objet.ObjetParNom(obj).SplitEveryNth(30);
+            for (var l = 0; l < lignes.Count; l++)
+            {
+                result[l].AddRange([
+                    new (Expedition.IndexObjet[ChoixObjet] == obj ? "│ " : "  "),
+                    new (lignes[l].FirstOrDefault().Value)
+                    ]);
+                result[l].AddRange([
+                    new (new string(' ', 47 - lignes[l].FirstOrDefault().Key)),
+                    new (Expedition.IndexObjet[ChoixObjet] == obj ? "│": " "),
+                    new (ChoixObjet != 2 && ChoixObjet != 5 ? "│" : " ")
+                    ]);
             }
         }
 
@@ -115,20 +276,31 @@ public class Ecran
     {
         if (cap.Cout == 0)
             return new(MettreAuMilieu($"+{cap.Gain}⭍",10),Color.Blue);
-        var perso = ordre[0].PointAction;
+        var perso = Ordre[0].PointAction;
         if (cap.Cout > perso)
             return new(MettreAuMilieu($"-{cap.Cout}⭍", 10), Color.Red);
         else
             return new(MettreAuMilieu($"-{cap.Cout}⭍", 10), Color.Green);
     }
 
+    private StringColorise AffichageQuantiteObjet(string obj)
+    {
+        var quantite = Expedition.Sac[obj];
+        return quantite switch
+        {
+            0 => new(MettreAuMilieu($"x{quantite}", 10), Color.Red),
+            > 0 => new(MettreAuMilieu($"x{quantite}", 10), Color.Blue),
+            _ => new(new string(' ', 10))
+        };
+    }
+
 
     private void AfficherOrdre()
     {
         var index = 1;
-        foreach (Entite entite in ordre)
+        foreach (var entite in Ordre)
         {
-            var box = Entourage(new StringColorise(MettreAuMilieu(entite.Nom, 20)), 20, out _, entite.Vivant ? equipe.Contains(entite) ? Color.Blue : Color.Red : Color.Black);
+            var box = Entourage(new StringColorise(MettreAuMilieu(entite.Nom, 20)), 20, out _, entite.Vivant ? Expedition.Equipe.Contains(entite) ? Color.Blue : Color.Red : Color.Black);
             AjouterString(box[0], index++);
             AjouterListe([box[1], box[2], box[3]], index++);
             AjouterString(box[^1], index++);
@@ -140,14 +312,14 @@ public class Ecran
         foreach (var e in cote)
         {
             if (Cibles.Contains(e))
-                cibles.Add(new (MettreAuMilieu(equipe.Contains(Cibles[0]) ? "˅" : "˄", 42)));
+                cibles.Add(new (MettreAuMilieu(Expedition.Equipe.Contains(Cibles[0]) ? "˅" : "˄", 42)));
             else
                 cibles.Add(new (new string(' ', 42)));
         }
 
         if (Cibles.Count != 0)
         {
-            if (equipe.Contains(Cibles[0]))
+            if (Expedition.Equipe.Contains(Cibles[0]))
             {
                 AjouterListe(cibles, debut-1);
             }
@@ -164,7 +336,7 @@ public class Ecran
                 if (f != 0)
                     result.Add(new(entite.Sprite[f-1]));
                 var pv = Entourage(BarPv(entite, out var taille), taille, out var tailleStr);
-                if (equipe.Contains(entite))
+                if (Expedition.Equipe.Contains(entite))
                     barrePointAction.AddRange(BarPointAction(entite, out taille));
                 result.Add(new(" "));
                 switch (f)
@@ -183,7 +355,7 @@ public class Ecran
                         result.Add(pv[5]);
                         break;
                     case 3:
-                        if (ennemies.Contains(entite))
+                        if (Ennemies.Contains(entite))
                         {
                             result.AddRange([new ("│"),new (new string(' ', tailleStr-2)), new ("│")]);
                             result.Add(new("    "));
@@ -208,7 +380,7 @@ public class Ecran
             return;
         }
         ;
-        if (ennemies.Contains(Cibles[0]))
+        if (Ennemies.Contains(Cibles[0]))
         {
             AjouterListe(cibles, debut +5);
         }

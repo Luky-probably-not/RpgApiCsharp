@@ -16,11 +16,11 @@ public class AppelsApi
         return laby;
     }
 
-    public static async Task<List<Entite>?> GetEquipe()
+    public static async Task<Expedition?> GetExpedition()
     {
         HttpResponseMessage response = await Client.GetAsync($"/api/equipe");
-        var equipe = await response.Content.ReadFromJsonAsync<List<Entite>>(OptionsJson);
-        return equipe;
+        var expe = await response.Content.ReadFromJsonAsync<Expedition>(OptionsJson);
+        return expe;
     }
 
     public static async Task<List<Entite>?> GetEnnemies()
@@ -32,11 +32,11 @@ public class AppelsApi
         return ennemies;
     }
 
-    public static async Task<int> GetRecompenses(int sommeNiveau)
+    public static async Task<Dictionary<string, int>> GetRecompenses(int sommeNiveau)
     {
         HttpResponseMessage response = await Client.GetAsync($"api/loot/{sommeNiveau}");
-        var loot = await response.Content.ReadFromJsonAsync<int>();
-        return loot;
+        var loot = await response.Content.ReadFromJsonAsync<Dictionary<string, int>>();
+        return loot!;
     }
 
     private static HttpClient SetupClient(string adresseApi)

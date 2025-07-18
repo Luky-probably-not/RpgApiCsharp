@@ -18,7 +18,7 @@ public class EnnemieController(ILogger<EnnemieController> logger) : Controller
         [
             new Zombie()
             {
-                Niveau = 2,
+                Niveau = 5,
                 Capacites = { new Frappe(), new Soin() }
             },
             new Zombie()
@@ -28,7 +28,7 @@ public class EnnemieController(ILogger<EnnemieController> logger) : Controller
             },
             new Zombie()
             {
-                Niveau = 2,
+                Niveau = 5,
                 Capacites = { new Frappe(), new Soin() }
             }
         ];

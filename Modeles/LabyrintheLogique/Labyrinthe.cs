@@ -9,10 +9,10 @@ public class Labyrinthe
     {
         Taille = taille;
         var id = 0;
-        for (int i = 0; i < Taille; i++)
+        for (var i = 0; i < Taille; i++)
         {
             var list = new List<Cellule>();
-            for (int f = 0; f < Taille; f++)
+            for (var f = 0; f < Taille; f++)
             {
                 list.Add(new Cellule(id));
                 id++;
@@ -20,9 +20,6 @@ public class Labyrinthe
             Laby.Add(list);
         }
     }
-
-    public Labyrinthe(){}
-
     #region Display
 
     public void Display(bool id = false)
@@ -43,10 +40,10 @@ public class Labyrinthe
         Console.Write("│");
         foreach (var cell in ligne.Take(ligne.Count - 1))
         {
-            Console.Write($" {(id ? cell.Id < 10 ? cell.Id.ToString() + " " : cell.Id : cell.Type + " ")} ");
+            Console.Write(" {0} ", id ? cell.Id < 10 ? cell.Id + " " : cell.Id : cell.Type + " ");
             Console.Write(cell.East ? "│" : " ");
         }
-        Console.WriteLine($" {(id ? ligne.Last().Id < 10 ? ligne.Last().Id.ToString() + " " : ligne.Last().Id : ligne.Last().Type + " ")} │");
+        Console.WriteLine(" {0} │", id ? ligne.Last().Id < 10 ? ligne.Last().Id + " " : ligne.Last().Id : ligne.Last().Type + " ");
     }
 
     private void DisplaySeparator(int idLigne)
@@ -196,13 +193,9 @@ public class Labyrinthe
 
     private static Labyrinthe ChangementId(Labyrinthe laby, int idPerdu, int idRemplacant)
     {
-        foreach (var ligne in laby.Laby)
+        foreach (var cell in from ligne in laby.Laby from cell in ligne where cell.Id == idPerdu select cell)
         {
-            foreach (var cell in ligne)
-            {
-                if (cell.Id == idPerdu)
-                    cell.Id = idRemplacant;
-            }
+            cell.Id = idRemplacant;
         }
 
         return laby;

@@ -2,6 +2,7 @@
 using Modeles.Capacites;
 using Modeles.Character;
 using Modeles.Character.Personnage;
+using Modeles.FonctionsJeu;
 
 namespace api.Controllers;
 
@@ -12,7 +13,7 @@ public class EquipeController(ILogger<EquipeController> logger) : Controller
     private readonly ILogger<EquipeController> _logger = logger;
  
     [HttpGet]
-    public List<Entite> Get()
+    public Expedition Get()
     {
         List<Entite> equipe =
         [
@@ -29,6 +30,9 @@ public class EquipeController(ILogger<EquipeController> logger) : Controller
                 Capacites = { new Frappe(), new MultiCoup(), new Sacrifice() }
             }
         ];
-        return equipe;
+        return new Expedition
+        {
+            Equipe = equipe
+        };
     }
 }
