@@ -1,4 +1,5 @@
 ﻿using Modeles.Character;
+using Modeles.FonctionsJeu;
 
 namespace Modeles.Capacites;
 
@@ -10,7 +11,9 @@ public class MultiCoup() : Capacite("MultiCoup", 3, false, false, 3, 0, "Inflige
         for (var i = 0; i < 3; i++)
         {
             cible.Blesser((int)Valeur,utilisateur,true);
-            
+            GameManager.Instance.MajEcran();
+            GameManager.Instance.Ecran.Afficher();
+            Thread.Sleep(700);
         }
         utilisateur.PointAction -= Cout;
     }

@@ -11,7 +11,8 @@ public class GameManager
     private static GameManager? _instance = null;
 
     public Expedition expedition;
-    private Ecran Ecran;
+    public Ecran Ecran;
+    private int DernierNiveau = 10;
 
     private GameManager()
     {
@@ -33,21 +34,18 @@ public class GameManager
     public List<Entite> Ennemies { get; set; }
     public List<Entite> OrdreAction { get; set; }
 
-    public void Setup(Expedition expe, List<Entite> ennemies)
+    public void Setup(Expedition expe)
     {
         expedition = expe;
-        Ennemies = ennemies;
-        RecupererOrdreAction();
     }
 
     public async Task Debut(int tailleLaby)
     {
         var laby = await AppelsApi.GetLabyrinthe(tailleLaby);
         var expe = await AppelsApi.GetExpedition();
-        var ennemies = await AppelsApi.GetEnnemies();
-        if (laby == null || expe == null || ennemies == null)
+        if (laby == null || expe == null)
             Environment.Exit(1);
-        Setup(expe, ennemies);
+        Setup(expe);
         Play(laby);
 
     }
@@ -59,8 +57,15 @@ public class GameManager
         {
             laby.Display();
             arrive = Deplacement(laby, out var cell);
-            if (cell == "E")
-                Combat().GetAwaiter().GetResult();
+            switch (cell)
+            {
+                case "E":
+                    Combat().GetAwaiter().GetResult();
+                    break;
+                case "S":
+                    Magasin.Generer(DernierNiveau*100).Afficher();
+                    break;
+            }
         }
         laby.Display();
     }
@@ -75,7 +80,7 @@ public class GameManager
 
     public async Task Combat()
     {
-        Ennemies = (await AppelsApi.GetEnnemies())!;
+        Ennemies = (await AppelsApi.GetEnnemies(DernierNiveau))!;
         while (VerifierVivant())
         {
             RecupererOrdreAction();
@@ -92,65 +97,59 @@ public class GameManager
             Ecran.ChoixAction = "";
             Ecran.ChoixCapacite = 0;
             Ecran.Afficher();
-            if (Ennemies.Contains(OrdreAction[0]))
-            {
-                Thread.Sleep(1000);
-                TourEnnemie();
-                Ennemies.Find(e => e == OrdreAction[0])!.FinTour();
-                Thread.Sleep(1000);
-                continue;
-            }
+            TourEnnemie();
 
-            List<Entite> cibles;
-            var action = true;
-            while (action)
-            {
-                var choix = ChoixAction();
-                switch (choix)
-                {
-                    case 0:
-                        MajEcran();
-                        Ecran.ChoixAction = nameof(Capacite);
-                        Ecran.ChoixCapacite = 0;
-                        Ecran.Afficher();
-                        var cap = ChoixCapacite();
-                        if (cap == null)
-                            continue;
-                        cibles = ChoixCible(cap);
-                        if (cap.Zone)
-                            cap.Utiliser(expedition.Equipe.Find(e => e == OrdreAction[0])!, cibles);
-                        else
-                            cap.Utiliser(expedition.Equipe.Find(e => e == OrdreAction[0])!, cibles[0]);
-                        action = false;
-                        break;
-                    case 1:
-                        MajEcran();
-                        Ecran.ChoixAction = nameof(Objet);
-                        Ecran.ChoixObjet = 0;
-                        Ecran.Afficher();
-                        var obj = ChoixObjet();
-                        if (obj == null)
-                            continue;
-                        cibles = ChoixCible(obj);
-                        if (obj.Zone)
-                            obj.Utiliser(cibles);
-                        else
-                            obj.Utiliser(cibles[0]);
-                        action = false;
-                        break;
-                    case 2:
-                        expedition.Equipe.Find(e => e == OrdreAction[0])!.FinTour();
-                        continue;
-                }
-            }
+            Agir();
             
-
             expedition.Equipe.Find(e => e == OrdreAction[0])!.FinTour();
         }
         MajEcran();
         Ecran.Afficher();
         expedition.Equipe.ForEach(e => e.FinCombat());
+        DernierNiveau += 5;
         expedition.Recompense(await AppelsApi.GetRecompenses(Ennemies.Sum(e => e.Niveau)));
+    }
+
+    public void Agir()
+    {
+        while (true)
+        {
+            var choix = ChoixAction();
+            List<Entite> cibles;
+            switch (choix)
+            {
+                case 0:
+                    MajEcran();
+                    Ecran.ChoixAction = nameof(Capacite);
+                    Ecran.ChoixCapacite = 0;
+                    Ecran.Afficher();
+                    var cap = ChoixCapacite();
+                    if (cap == null)
+                        continue;
+                    cibles = ChoixCible(cap);
+                    if (cap.Zone)
+                        cap.Utiliser(expedition.Equipe.Find(e => e == OrdreAction[0])!, cibles);
+                    else
+                        cap.Utiliser(expedition.Equipe.Find(e => e == OrdreAction[0])!, cibles[0]);
+                    return;
+                case 1:
+                    MajEcran();
+                    Ecran.ChoixAction = nameof(Objet);
+                    Ecran.ChoixObjet = 0;
+                    Ecran.Afficher();
+                    var obj = ChoixObjet();
+                    if (obj == null)
+                        continue;
+                    cibles = ChoixCible(obj);
+                    if (obj.Zone)
+                        obj.Utiliser(cibles);
+                    else
+                        obj.Utiliser(cibles[0]);
+                    return;
+                case 2:
+                    return;
+            }
+        }
     }
 
     private bool VerifierVivant()
@@ -162,6 +161,8 @@ public class GameManager
 
     private void TourEnnemie()
     {
+        if (!Ennemies.Contains(OrdreAction[0])) return;
+        Thread.Sleep(1000);
         var entite = OrdreAction[0];
         var cap = (entite as IAction)!.ChoisirCapacite();
         var rand = new Random();
@@ -180,6 +181,8 @@ public class GameManager
                 cap.Utiliser(entite, cibleValide[rand.Next(cibleValide.Count)]);
                 break;
         }
+        Thread.Sleep(1000);
+        Ennemies.Find(e => e == OrdreAction[0])!.FinTour();
     }
 
     public int ChoixAction()
@@ -362,7 +365,7 @@ public class GameManager
         return Ecran.Cibles;
     }
 
-    private void MajEcran()
+    public void MajEcran()
     {
         Ecran =  new Ecran()
         {

@@ -23,9 +23,9 @@ public class AppelsApi
         return expe;
     }
 
-    public static async Task<List<Entite>?> GetEnnemies()
+    public static async Task<List<Entite>?> GetEnnemies(int niveau)
     {
-        HttpResponseMessage response = await Client.GetAsync("api/ennemie");
+        HttpResponseMessage response = await Client.GetAsync($"api/ennemie/{niveau}");
         var ennemies = await response.Content.ReadFromJsonAsync<List<Entite>>(OptionsJson);
         ennemies!.ForEach(e => e.ReinitialiserValeurAction());
         ennemies!.ForEach(e => e.MettreANiveau());

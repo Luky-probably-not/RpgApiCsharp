@@ -1,7 +1,8 @@
+﻿using Modeles.Capacites;
+using Modeles.FonctionsJeu;
+using Modeles.Objets;
 using Pastel;
 using System.Drawing;
-using Modeles.Capacites;
-using Modeles.Objets;
 
 namespace Modeles;
 
@@ -103,5 +104,27 @@ public static class Extensions
         result[emplacement] = t;
 
         return result;
+    }
+
+    public static string FormatterLigne(this List<StringColorise> liste)
+    {
+        var result = string.Join("", liste.Select(f => f.Str));
+        var length = 0;
+        liste.ForEach(e => length += e.Length);
+        var lastElement = result[^1].ToString();
+        var check = lastElement is "┐" or "┘" or "│" or "┤";
+        for (var i = 0; i < 154 - length; i++)
+        {
+            result += " ";
+        }
+
+        return check ? result : result[..^1] + "│";
+    }
+
+    public static string MettreAuMilieu(string str, int count)
+    {
+        var reste = (count - str.Length) % 2 == 1 ? " " : "";
+        var vide = new string(' ', (int)Math.Ceiling((count - str.Length -reste.Length) / 2f));
+        return vide + reste + str + vide;
     }
 }

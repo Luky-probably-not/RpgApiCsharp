@@ -135,6 +135,7 @@ public class Labyrinthe
         Laby = copie.Laby;
         InitalialiserDebut();
         GenererRencontre();
+        GenererMagasin();
     }
 
     private void InitalialiserDebut()
@@ -262,7 +263,7 @@ public class Labyrinthe
 
     private void GenererRencontre()
     {
-        for (var i = 0; i < Taille; i++)
+        for (var i = 0; i < Taille/5; i++)
         {
             var rand = new Random();
             var col = rand.Next(Taille);
@@ -274,6 +275,23 @@ public class Labyrinthe
             }
 
             Laby[col][lig].Type = "E";
+        }
+    }
+
+    private void GenererMagasin()
+    {
+        for (var i = 0; i < Taille; i++)
+        {
+            var rand = new Random();
+            var col = rand.Next(Taille);
+            var lig = rand.Next(Taille);
+            while (Laby[col][lig].Type != " ")
+            {
+                col = rand.Next(Taille);
+                lig = rand.Next(Taille);
+            }
+
+            Laby[col][lig].Type = "S";
         }
     }
 
