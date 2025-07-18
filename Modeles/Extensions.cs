@@ -1,11 +1,6 @@
 using Pastel;
 using System.Drawing;
-using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
 using Modeles.Capacites;
-using Modeles.Character;
-using Modeles.Character.Ennemie;
-using Modeles.Character.Personnage;
 using Modeles.Objets;
 
 namespace Modeles;

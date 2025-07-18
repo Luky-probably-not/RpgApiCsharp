@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Modeles.Capacites;
+﻿using Modeles.Capacites;
 using Modeles.Character;
 using Modeles.Character.Ennemie;
 using Modeles.LabyrintheLogique;

@@ -1,6 +1,4 @@
 ﻿using Modeles.Character;
-using System.Drawing;
-using static Modeles.Extensions;
 
 namespace Modeles.Capacites;
 
