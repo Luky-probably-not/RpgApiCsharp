@@ -1,6 +1,7 @@
-﻿using Modeles.Character;
+﻿using System.Drawing;
+using Modeles.Character;
 using Modeles.Objets;
-
+using static Modeles.Extensions;
 namespace Modeles.FonctionsJeu;
 
 public class Expedition
@@ -39,5 +40,10 @@ public class Expedition
             }
             Sac[kvp.Key] += kvp.Value;
         }
+    }
+
+    public StringColorise QuantitePieces()
+    {
+        return new(MettreAuMilieu($"Pièces : x{Pieces}$",50),Color.Yellow);
     }
 }

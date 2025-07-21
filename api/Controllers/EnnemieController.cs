@@ -31,17 +31,17 @@ public class EnnemieController(ILogger<EnnemieController> logger) : Controller
         var last = niveau - max - min;
         List<Entite> ennemies =
         [
-            new Zombie()
+            new Zombie
             {
                 Niveau = last,
                 Capacites = { new Frappe(), new Soin() }
             },
-            new Zombie()
+            new Zombie
             {
                 Niveau = max,
                 Capacites = { new Frappe(), new Soin() }
             },
-            new Zombie()
+            new Zombie
             {
                 Niveau = min,
                 Capacites = { new Frappe(), new Soin() }

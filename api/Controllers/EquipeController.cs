@@ -17,15 +17,15 @@ public class EquipeController(ILogger<EquipeController> logger) : Controller
     {
         List<Entite> equipe =
         [
-            new Chevalier()
+            new Chevalier
             {
                 Capacites = { new Frappe(), new AttaqueZone(), new Buff() }
             }, 
-            new Sorcier()
+            new Sorcier
             {
                 Capacites = { new Soin(), new Frappe(), new Energie() }
             },
-            new Barbare()
+            new Barbare
             {
                 Capacites = { new Frappe(), new MultiCoup(), new Sacrifice() }
             }

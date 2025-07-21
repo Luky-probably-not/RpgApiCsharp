@@ -5,6 +5,11 @@ namespace Modeles.Character;
 public abstract class Entite(string nom, int att, int def, int pv, int vitesse, List<string> sprite)
 {
     public int Niveau { get; set; } = 1;
+
+    public int XpActuel = 0;
+    public int XpBesoin = 100;
+
+    public bool DoubleXp = false;
     public string Nom { get; set; } = nom;
 
     public int AttaqueDeBase {get; set;} = att;
@@ -58,7 +63,7 @@ public abstract class Entite(string nom, int att, int def, int pv, int vitesse, 
 
     public void MettreANiveau()
     {
-        PointDeVie = (int)Math.Round(PointDeVie * (1f + Niveau / 10f));
+        PointDeVie    = (int)Math.Round(PointDeVie    * (1f + Niveau / 10f));
         PointDeVieMax = (int)Math.Round(PointDeVieMax * (1f + Niveau / 10f));
         AttaqueDeBase = (int)Math.Round(AttaqueDeBase * (1f + Niveau / 10f));
         DefenseDeBase = (int)Math.Round(DefenseDeBase * (1f + Niveau / 10f));
@@ -119,17 +124,30 @@ public abstract class Entite(string nom, int att, int def, int pv, int vitesse, 
             Capacites.Add(capacite);
     }
 
-    public void FinTour()
+    public void FinTour(bool doubleXp)
     {
+        DoubleXp = doubleXp ? doubleXp : DoubleXp;
         BonusMalusTour();
         ReinitialiserValeurAction();
     }
 
-    public void FinCombat()
+    public void FinCombat(int xp)
     {
         Bonus = [];
         Malus = [];
         PointAction = 5;
+        NiveauSup(xp);
         ReinitialiserValeurAction();
+    }
+
+    public void NiveauSup(int xp)
+    {
+        XpActuel += DoubleXp ? xp*2 : xp;
+        if (DoubleXp) DoubleXp = false;
+        if (XpActuel < XpBesoin) return;
+        Niveau++;
+        XpActuel -= XpBesoin;
+        XpBesoin = Niveau ^ 2 + 100;
+        MettreANiveau();
     }
 }

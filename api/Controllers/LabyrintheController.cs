@@ -9,10 +9,10 @@ public class LabyrintheController(ILogger<LabyrintheController> logger) : Contro
 {
     private readonly ILogger<LabyrintheController> _logger = logger;
 
-    [HttpGet("{taille}")]
-    public Labyrinthe Get(string taille)
+    [HttpGet("{taille:int}")]
+    public Labyrinthe Get(int taille)
     {
-        var laby = new Labyrinthe(int.Parse(taille));
+        var laby = new Labyrinthe(taille);
         laby.Generation();
         return laby;
     }

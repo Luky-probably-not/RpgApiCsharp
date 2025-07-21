@@ -1,5 +1,4 @@
 ﻿using Modeles.Capacites;
-using Modeles.FonctionsJeu;
 using Modeles.Objets;
 using Pastel;
 using System.Drawing;
@@ -14,6 +13,7 @@ public static class Extensions
         public string Str { get; set; } = color == null ? str : str.Pastel((Color)color);
         public string BaseStr { get; set; } = str;
 
+        public Color? Couleur = color;
         public List<StringColorise> SplitEveryNth(int n)
         {
             if (BaseStr == null || n <= 0) return [];
@@ -126,5 +126,12 @@ public static class Extensions
         var reste = (count - str.Length) % 2 == 1 ? " " : "";
         var vide = new string(' ', (int)Math.Ceiling((count - str.Length -reste.Length) / 2f));
         return vide + reste + str + vide;
+    }
+
+
+    public static List<T> Swap<T>(this List<T> list, int id1, int id2)
+    {
+        (list[id1], list[id2]) = (list[id2], list[id1]);
+        return list;
     }
 }

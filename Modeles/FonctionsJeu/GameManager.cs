@@ -1,6 +1,7 @@
 ﻿using Modeles.Capacites;
 using Modeles.Character;
 using Modeles.Character.Ennemie;
+using Modeles.FonctionsJeu.MiniGames;
 using Modeles.LabyrintheLogique;
 using Modeles.Objets;
 using static Modeles.FonctionsJeu.LabyrintheJeu;
@@ -63,7 +64,28 @@ public class GameManager
                     Combat().GetAwaiter().GetResult();
                     break;
                 case "S":
-                    Magasin.Generer(DernierNiveau*100).Afficher();
+                    expedition.Pieces += 500;
+                    Achats();
+                    break;
+                case "M":
+                    var rand = new Random();
+                    Dictionary<string, int> recompense;
+                    if (rand.NextDouble() > 1)
+                    {
+                        AppelsApi.GetMemory(DernierNiveau).GetAwaiter().GetResult().Jouer(out recompense);
+                    }
+                    else
+                    {
+                        var jeu = new TimingMiniGame();
+                        jeu.Jouer(out string res);
+                        recompense = AppelsApi.GetRecompenseTiming(DernierNiveau, res).GetAwaiter().GetResult();
+                    }
+                    foreach (var kvp in recompense.Where(kvp => kvp.Value != 0))
+                    {
+                        Console.WriteLine("Butin : {0} x{1}", Objet.ObjetParNom(kvp.Key).Nom, kvp.Value);
+                    }
+                    expedition.Recompense(recompense);
+                    Console.ReadKey();
                     break;
             }
         }
@@ -76,6 +98,62 @@ public class GameManager
         OrdreAction.Sort((x, y) => x.ValeurAction.CompareTo(y.ValeurAction));
         var valeur = OrdreAction[0].ValeurAction;
         OrdreAction.ForEach(e => e.ValeurAction -= valeur);
+    }
+
+    public void Achats()
+    {
+        var magasin = AppelsApi.GetMagasin(DernierNiveau*500).GetAwaiter().GetResult();
+        var choix = 0;
+        while (true)
+        {
+            magasin.Afficher(choix);
+            choix = ChoixMagasin(choix, out var touche);
+            if (touche == ConsoleKey.Escape)
+                break;
+            if (touche != ConsoleKey.Spacebar)
+                continue;
+
+            var objet = magasin.Objets[choix];
+            var achatValide = magasin.Offres.TryGetValue(objet, out var cout);
+            if (!achatValide)
+                continue;
+            if (cout > expedition.Pieces)
+                continue;
+
+            achatValide = magasin.Stock[objet] > 0;
+            if (!achatValide)
+                continue;
+            expedition.Pieces -= magasin.Offres[objet];
+            expedition.Sac[objet]++;
+            magasin.Stock[objet] -= 1;
+        }
+    }
+
+    public static int ChoixMagasin(int choix, out ConsoleKey touche)
+    {
+        touche = Console.ReadKey().Key;
+        List<ConsoleKey> toucheValide =
+        [
+            ConsoleKey.LeftArrow,
+            ConsoleKey.RightArrow,
+            ConsoleKey.UpArrow,
+            ConsoleKey.DownArrow,
+            ConsoleKey.Spacebar,
+            ConsoleKey.Escape
+        ];
+        while (!toucheValide.Contains(touche)) 
+            touche = Console.ReadKey().Key;
+        choix += touche switch
+        {
+            ConsoleKey.RightArrow => 1,
+            ConsoleKey.UpArrow => -2,
+            ConsoleKey.DownArrow => 2,
+            ConsoleKey.LeftArrow => -1,
+            _ => 0
+        };
+        if (choix < 0) choix += 6;
+        if (choix > 5) choix -= 6;
+        return choix;
     }
 
     public async Task Combat()
@@ -101,18 +179,17 @@ public class GameManager
 
             Agir();
             
-            expedition.Equipe.Find(e => e == OrdreAction[0])!.FinTour();
         }
         MajEcran();
         Ecran.Afficher();
-        expedition.Equipe.ForEach(e => e.FinCombat());
+        expedition.Equipe.ForEach(e => e.FinCombat(Ennemies.Sum(f => f.Niveau)*500));
         DernierNiveau += 5;
         expedition.Recompense(await AppelsApi.GetRecompenses(Ennemies.Sum(e => e.Niveau)));
     }
 
     public void Agir()
     {
-        while (true)
+        while (expedition.Equipe.Contains(OrdreAction[0]))
         {
             var choix = ChoixAction();
             List<Entite> cibles;
@@ -127,11 +204,24 @@ public class GameManager
                     if (cap == null)
                         continue;
                     cibles = ChoixCible(cap);
+                    var doublexp = false;
                     if (cap.Zone)
+                    {
                         cap.Utiliser(expedition.Equipe.Find(e => e == OrdreAction[0])!, cibles);
+                        var vivant = cibles.Where(e => e.Vivant);
+                        if (vivant.Count() != cibles.Count)
+                            doublexp = true;
+
+                    }
                     else
+                    {
                         cap.Utiliser(expedition.Equipe.Find(e => e == OrdreAction[0])!, cibles[0]);
-                    return;
+
+                        doublexp = !cibles[0].Vivant;
+                    }
+                    expedition.Equipe.Find(e => e == OrdreAction[0])!.FinTour(doublexp);
+                    return; 
+
                 case 1:
                     MajEcran();
                     Ecran.ChoixAction = nameof(Objet);
@@ -145,8 +235,10 @@ public class GameManager
                         obj.Utiliser(cibles);
                     else
                         obj.Utiliser(cibles[0]);
+                    expedition.Equipe.Find(e => e == OrdreAction[0])!.FinTour(false);
                     return;
                 case 2:
+                    expedition.Equipe.Find(e => e == OrdreAction[0])!.FinTour(false);
                     return;
             }
         }
@@ -182,7 +274,7 @@ public class GameManager
                 break;
         }
         Thread.Sleep(1000);
-        Ennemies.Find(e => e == OrdreAction[0])!.FinTour();
+        Ennemies.Find(e => e == OrdreAction[0])!.FinTour(false);
     }
 
     public int ChoixAction()
@@ -289,7 +381,7 @@ public class GameManager
             MajEcran();
             Ecran.ChoixCapacite = choix;
             Ecran.ChoixAction = nameof(Capacite);
-            energie = OrdreAction[0].PointAction - OrdreAction[0].Capacites[choix].Cout > 0;
+            energie = OrdreAction[0].PointAction - OrdreAction[0].Capacites[choix].Cout >= 0;
             Ecran.Afficher();
         }
         return touche == ConsoleKey.Escape ? null : OrdreAction[0].Capacites[choix];

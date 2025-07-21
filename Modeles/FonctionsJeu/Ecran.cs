@@ -73,7 +73,6 @@ public class Ecran
             ligne.Add(new ("│"));
         }
         AjouterListe(ligne, _ecran.Count, false);
-        var length = _ecran.Count;
         for (var b = 0; b < 4; b++)
         {
             ligne = [new("│")];
