@@ -1,5 +1,6 @@
-﻿using Modeles.Objets;
-using System.Drawing;
+﻿using System.Drawing;
+using Modeles.Items;
+using Modeles.Items.Objets;
 using static Modeles.Extensions;
 namespace Modeles.FonctionsJeu;
 
@@ -159,7 +160,7 @@ public class Magasin
 
     private static StringColorise AfficherQuantiteObjet(string obj)
     {
-        var quantite = GameManager.Instance.expedition.Sac[obj];
+        var quantite = GameManager.Instance.Expedition.Sac[obj];
         return new(MettreAuMilieu($"x{quantite}", 10), quantite == 0 ? Color.Red : Color.Green);
     }
 
@@ -203,7 +204,7 @@ public class Magasin
         else
             ligne.AddRange([new(new string(' ', 50))]);
 
-        ligne.AddRange([new("│"), index/2 != 2 ? new(new string(' ', 50)) : GameManager.Instance.expedition.QuantitePieces(), new("│")]);
+        ligne.AddRange([new("│"), index/2 != 2 ? new(new string(' ', 50)) : GameManager.Instance.Expedition.QuantitePieces(), new("│")]);
         if (ChoixAction % 2 != 0 && choix)
             ligne.AddRange([new("└"), new(new string('─', 48)), new("┘")]);
         else
@@ -250,7 +251,7 @@ public class Magasin
     private StringColorise CoutObjet(string obj)
     {
         var cout = Offres[obj];
-        var argent = GameManager.Instance.expedition.Pieces;
+        var argent = GameManager.Instance.Expedition.Pieces;
         return cout switch
         {
             _ when cout > argent => new(MettreAuMilieu($"-{cout}$", 10), Color.Red),
@@ -313,7 +314,7 @@ public class Magasin
 
             ligne.AddRange([
                 new("│"),
-                index && a == 6 ? GameManager.Instance.expedition.QuantitePieces() : new(new string(' ', 50)),
+                index && a == 6 ? GameManager.Instance.Expedition.QuantitePieces() : new(new string(' ', 50)),
                 new("│")
             ]);
             if (ChoixAction % 2 != 0 && choix)

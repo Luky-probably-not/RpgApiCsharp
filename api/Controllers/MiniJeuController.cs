@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Modeles.FonctionsJeu.MiniGames;
-using Modeles.Objets;
+using Modeles.Items.Objets;
 
 namespace api.Controllers;
 

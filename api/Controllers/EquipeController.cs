@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Modeles.Capacites;
+
 using Modeles.Character;
 using Modeles.Character.Personnage;
 using Modeles.FonctionsJeu;
+using Modeles.MoveSet.Capacites;
 
 namespace api.Controllers;
 

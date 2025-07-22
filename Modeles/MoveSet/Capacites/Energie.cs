@@ -1,6 +1,6 @@
 ﻿using Modeles.Character;
 
-namespace Modeles.Capacites;
+namespace Modeles.MoveSet.Capacites;
 
 public class Energie() : Capacite("Energie", 3, true, true, 5, 0, "Restaure {Valeur} Points d'Actions a toute l'équipe")
 {

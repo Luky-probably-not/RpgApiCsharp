@@ -1,7 +1,7 @@
 ﻿using Modeles.Character;
-using Modeles.FonctionsJeu;
+using Modeles.FonctionsJeu.Helper;
 
-namespace Modeles.Capacites;
+namespace Modeles.MoveSet.Capacites;
 
 public class VolPv() : Capacite("Vol de vie", 2, true, true, 6, 0, "Inflige {Valeur} de dégats à tous les ennemis. Restaure {Valeur10} pv a l'équipe", true)
 {
@@ -9,8 +9,8 @@ public class VolPv() : Capacite("Vol de vie", 2, true, true, 6, 0, "Inflige {Val
     {
         ennemies.ForEach(cible => cible.Blesser((int)Valeur, utilisateur,false));
         
-        GameManager.Instance.MajEcran();
-        GameManager.Instance.Ecran.Afficher();
+        CombatHelper.MajEcran();
+        CombatHelper.Ecran.Afficher();
         Thread.Sleep(700);
 
         equipe.ForEach(cible => cible.Soigner((int)Valeur*10));

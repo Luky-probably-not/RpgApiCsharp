@@ -1,6 +1,6 @@
 ﻿using Modeles.Character;
 
-namespace Modeles.Capacites;
+namespace Modeles.MoveSet;
 
 public abstract class Capacite(string nom, float val, bool aoe, bool ally, int cout, int gain, string description, bool tous = false)
 {

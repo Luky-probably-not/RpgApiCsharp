@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
-using Modeles.Capacites;
 using Modeles.Character;
-using Modeles.Objets;
+using Modeles.Items;
+using Modeles.MoveSet;
 using static Modeles.Extensions;
 
 namespace Modeles.FonctionsJeu;

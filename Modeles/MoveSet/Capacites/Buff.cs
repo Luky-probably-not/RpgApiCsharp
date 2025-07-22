@@ -1,6 +1,6 @@
 ﻿using Modeles.Character;
 
-namespace Modeles.Capacites;
+namespace Modeles.MoveSet.Capacites;
 
 public class Buff : Capacite
 {

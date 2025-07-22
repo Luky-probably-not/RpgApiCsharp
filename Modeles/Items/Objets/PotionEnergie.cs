@@ -1,6 +1,6 @@
 ﻿using Modeles.Character;
 
-namespace Modeles.Objets;
+namespace Modeles.Items.Objets;
 
 public class PotionEnergie() : Objet("Potion d'Energie", 7, "Rend {Valeur} point d'action à une cible", false)
 {

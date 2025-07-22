@@ -1,6 +1,6 @@
 ﻿using Modeles.Character;
 
-namespace Modeles.Capacites;
+namespace Modeles.MoveSet.Capacites;
 
 public class AttaqueZone() : Capacite("AttaqueZone", 5, true, false, 3, 0, "Inflige {Valeur} dégats tout les ennemies")
 {

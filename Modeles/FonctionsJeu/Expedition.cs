@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using Modeles.Character;
-using Modeles.Objets;
+using Modeles.Items.Objets;
 using static Modeles.Extensions;
 namespace Modeles.FonctionsJeu;
 

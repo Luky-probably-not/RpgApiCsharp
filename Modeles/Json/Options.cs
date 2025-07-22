@@ -1,11 +1,12 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
-using Modeles.Capacites;
 using Modeles.Character;
 using Modeles.Character.Ennemie;
 using Modeles.Character.Personnage;
 using Modeles.FonctionsJeu.MiniGames;
-using Modeles.Objets;
+using Modeles.Items.Objets;
+using Modeles.MoveSet;
+using Modeles.MoveSet.Capacites;
 
 namespace Modeles.Json;
 
@@ -67,7 +68,7 @@ public static class Options
                                     }
                                 };
                                 break;
-                            case var t when t == typeof(Objet):
+                            case var t when t == typeof(Items.Objet):
                                 ti.PolymorphismOptions = new JsonPolymorphismOptions
                                 {
                                     TypeDiscriminatorPropertyName = "$type",

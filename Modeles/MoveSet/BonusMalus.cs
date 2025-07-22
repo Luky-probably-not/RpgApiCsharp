@@ -1,4 +1,4 @@
-﻿namespace Modeles.Capacites;
+﻿namespace Modeles.MoveSet;
 
 public class BonusMalus(string nom, float valeur)
 {

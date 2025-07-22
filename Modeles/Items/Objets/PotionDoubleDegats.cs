@@ -1,6 +1,6 @@
 ﻿using Modeles.Character;
 
-namespace Modeles.Objets;
+namespace Modeles.Items.Objets;
 
 public class PotionDoubleDegats() : Objet("Potion de Dégats", 1f, "La prochaine attaque inflige +{ValeurPourcent} de dégats supplémentaire", false)
 {

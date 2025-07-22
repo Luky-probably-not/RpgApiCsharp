@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Modeles.Objets;
+using Modeles.Items;
+using Modeles.Items.Objets;
 
 namespace api.Controllers;
 

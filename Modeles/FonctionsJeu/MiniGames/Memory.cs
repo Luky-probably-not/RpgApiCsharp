@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using Modeles.Objets;
+using Modeles.Items.Objets;
 using static Modeles.Extensions;
 
 namespace Modeles.FonctionsJeu.MiniGames;

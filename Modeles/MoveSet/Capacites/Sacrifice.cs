@@ -1,6 +1,6 @@
 ﻿using Modeles.Character;
 
-namespace Modeles.Capacites;
+namespace Modeles.MoveSet.Capacites;
 
 public class Sacrifice() : Capacite("Sacrifice", 0.4f, false, false, 9, 0, "Perd {ValeurPourcent} des pv actuels. Augmente les dégats en fonction des pv perdus")
 {

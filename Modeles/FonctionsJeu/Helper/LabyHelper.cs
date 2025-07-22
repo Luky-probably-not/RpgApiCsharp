@@ -1,19 +1,24 @@
 ﻿using Modeles.LabyrintheLogique;
 
-namespace Modeles.FonctionsJeu;
+namespace Modeles.FonctionsJeu.Helper;
 
-public static class LabyrintheJeu
+public static class LabyHelper
 {
-    private static Labyrinthe Laby = new(1);
-    private static int PosColonne;
-    private static int PosLigne;
+    public static Labyrinthe Laby { get; set; }= new(1);
+    private static int _posColonne;
+    private static int _posLigne;
 
-    public static bool Deplacement(Labyrinthe laby, out string cell)
+    public static bool LabyDeplacement(out string cell)
     {
-        Laby = laby;
         PositionJoueur();
         return Pas(RecupererInput(), out cell);
     }
+
+    public static void LabyAffichage()
+    {
+        Laby.Display();
+    }
+
 
     private static void PositionJoueur()
     {
@@ -22,13 +27,13 @@ public static class LabyrintheJeu
             for (var f = 0; f < Laby.Taille; f++)
             {
                 if (Laby.Laby[i][f].Type != "⚗") continue;
-                PosColonne = f;
-                PosLigne = i;
+                _posColonne = f;
+                _posLigne = i;
                 return;
             }
         }
-        PosColonne = 0;
-        PosLigne = 0;
+        _posColonne = 0;
+        _posLigne = 0;
     }
 
     private static ConsoleKey RecupererInput()
@@ -55,10 +60,10 @@ public static class LabyrintheJeu
     {
         return touche switch
         {
-            ConsoleKey.UpArrow => !Laby.Laby[PosLigne][PosColonne].North,
-            ConsoleKey.DownArrow => !Laby.Laby[PosLigne][PosColonne].South,
-            ConsoleKey.LeftArrow => !Laby.Laby[PosLigne][PosColonne].West,
-            ConsoleKey.RightArrow => !Laby.Laby[PosLigne][PosColonne].East,
+            ConsoleKey.UpArrow => !Laby.Laby[_posLigne][_posColonne].North,
+            ConsoleKey.DownArrow => !Laby.Laby[_posLigne][_posColonne].South,
+            ConsoleKey.LeftArrow => !Laby.Laby[_posLigne][_posColonne].West,
+            ConsoleKey.RightArrow => !Laby.Laby[_posLigne][_posColonne].East,
             _ => false
         };
     }
@@ -77,10 +82,10 @@ public static class LabyrintheJeu
             ConsoleKey.RightArrow => 1,
             _ => 0
         };
-        Laby.Laby[PosLigne][PosColonne].Type = " ";
-        var verif = Laby.Laby[PosLigne + NS][PosColonne + WE].Type == "B";
-        cell = Laby.Laby[PosLigne + NS][PosColonne + WE].Type!;
-        Laby.Laby[PosLigne + NS][PosColonne + WE].Type = "⚗";
+        Laby.Laby[_posLigne][_posColonne].Type = " ";
+        var verif = Laby.Laby[_posLigne + NS][_posColonne + WE].Type == "B";
+        cell = Laby.Laby[_posLigne + NS][_posColonne + WE].Type!;
+        Laby.Laby[_posLigne + NS][_posColonne + WE].Type = "⚗";
         return verif;
     }
 }

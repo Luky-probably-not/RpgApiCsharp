@@ -1,4 +1,4 @@
-﻿using Modeles.Capacites;
+﻿using Modeles.MoveSet;
 
 namespace Modeles.Character.Ennemie;
 

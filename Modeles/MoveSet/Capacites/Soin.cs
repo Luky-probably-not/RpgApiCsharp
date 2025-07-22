@@ -1,14 +1,13 @@
 ﻿using Modeles.Character;
 
-namespace Modeles.Capacites;
+namespace Modeles.MoveSet.Capacites;
 
-public class Frappe() : Capacite("Frappe", 5, false, false, 0, 3, "Inflige {Valeur} dégats un ennemi")
+public class Soin() : Capacite("Soin", 0.3f, false, true, 3, 0, "Soigne un allié de {ValeurPourcent} de ses points de vie max")
 {
     public override void Utiliser(Entite utilisateur, Entite cible)
     {
-        cible.Blesser((int)Valeur,utilisateur);
+        cible.Soigner(Valeur);
         utilisateur.PointAction -= Cout;
-        utilisateur.PointAction += Gain;
     }
 
     public override void Utiliser(Entite utilisateur, List<Entite> cibles){ }

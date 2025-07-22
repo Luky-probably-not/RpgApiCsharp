@@ -1,7 +1,8 @@
 ﻿using System.Globalization;
 using Modeles.Character;
+using Modeles.Items.Objets;
 
-namespace Modeles.Objets;
+namespace Modeles.Items;
 
 public abstract class Objet(string nom, float valeur, string description, bool zone)
 {

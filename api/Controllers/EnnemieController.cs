@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Modeles.Capacites;
 using Modeles.Character;
 using Modeles.Character.Ennemie;
+using Modeles.MoveSet.Capacites;
 
 namespace api.Controllers;
 

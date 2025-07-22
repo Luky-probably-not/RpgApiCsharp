@@ -1,7 +1,7 @@
 ﻿using Modeles.Character;
-using Modeles.FonctionsJeu;
+using Modeles.FonctionsJeu.Helper;
 
-namespace Modeles.Capacites;
+namespace Modeles.MoveSet.Capacites;
 
 public class MultiCoup() : Capacite("MultiCoup", 3, false, false, 3, 0, "Inflige {Valeur} dégats 3 fois à un ennemie. Ignore la defense ennemie")
 
@@ -11,8 +11,8 @@ public class MultiCoup() : Capacite("MultiCoup", 3, false, false, 3, 0, "Inflige
         for (var i = 0; i < 3; i++)
         {
             cible.Blesser((int)Valeur,utilisateur,true);
-            GameManager.Instance.MajEcran();
-            GameManager.Instance.Ecran.Afficher();
+            CombatHelper.MajEcran();
+            CombatHelper.Ecran.Afficher();
             Thread.Sleep(700);
         }
         utilisateur.PointAction -= Cout;

@@ -1,7 +1,7 @@
-﻿using Modeles.Capacites;
-using Modeles.Objets;
+﻿using Modeles.Items;
 using Pastel;
 using System.Drawing;
+using Modeles.MoveSet;
 
 namespace Modeles;
 
@@ -14,16 +14,6 @@ public static class Extensions
         public string BaseStr { get; set; } = str;
 
         public Color? Couleur = color;
-        public List<StringColorise> SplitEveryNth(int n)
-        {
-            if (BaseStr == null || n <= 0) return [];
-            List<StringColorise> liste = [];
-            for (var i = 0; i < Length; i += n)
-            {
-                liste.Add(new (Str.Substring(i, Math.Min(n, Length))));
-            }
-            return liste;
-        }
     }
 
     public static List<Dictionary<int, string>> SplitEveryNth(this Capacite cap, int n)

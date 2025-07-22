@@ -1,6 +1,6 @@
 ﻿using Modeles.Character;
 
-namespace Modeles.Objets;
+namespace Modeles.Items.Objets;
 
 public class DefenseBoost() : Objet("Potion de Défense", 0.5f, "Augmente la défense de l'équipe de {ValeurPourcent}", true)
 {
