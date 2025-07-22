@@ -1,5 +1,6 @@
 ﻿using Modeles.Character;
 using Modeles.Character.Ennemie;
+using Modeles.FonctionsJeu.FonctionsJeu;
 using Modeles.Items;
 using Modeles.MoveSet;
 
@@ -49,6 +50,15 @@ public static class CombatHelper
         GameManager.Instance.Expedition = _expedition;
     }
 
+    public static void MajEcran()
+    {
+        Ecran = new Ecran()
+        {
+            Expedition = _expedition!,
+            Ennemies = _ennemies,
+            Ordre = _ordreAction,
+        };
+    }
 
     private static bool VerifierVivant()
     {
@@ -317,14 +327,5 @@ public static class CombatHelper
         }
 
         return Ecran.Cibles;
-    }
-    public static void MajEcran()
-    {
-        Ecran = new Ecran()
-        {
-            Expedition = _expedition!,
-            Ennemies = _ennemies,
-            Ordre = _ordreAction,
-        };
     }
 }

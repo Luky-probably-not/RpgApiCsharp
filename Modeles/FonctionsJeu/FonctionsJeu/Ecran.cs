@@ -4,7 +4,7 @@ using Modeles.Items;
 using Modeles.MoveSet;
 using static Modeles.Extensions;
 
-namespace Modeles.FonctionsJeu;
+namespace Modeles.FonctionsJeu.FonctionsJeu;
 
 public class Ecran
 {
@@ -17,7 +17,7 @@ public class Ecran
     public int ChoixObjet;
     public string ChoixAction ="";
     public List<Entite> Cibles = [];
-    public List<String> Actions = ["Capacites", "Objets", "Passer le tour"];
+    public List<string> Actions = ["Capacites", "Objets", "Passer le tour"];
 
     public void Afficher()
     {

@@ -1,4 +1,5 @@
-﻿using Modeles.FonctionsJeu.MiniGames;
+﻿using Modeles.FonctionsJeu.FonctionsJeu;
+using Modeles.FonctionsJeu.MiniGames;
 using Modeles.Items;
 
 namespace Modeles.FonctionsJeu.Helper;

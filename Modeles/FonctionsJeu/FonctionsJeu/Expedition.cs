@@ -2,7 +2,7 @@
 using Modeles.Character;
 using Modeles.Items.Objets;
 using static Modeles.Extensions;
-namespace Modeles.FonctionsJeu;
+namespace Modeles.FonctionsJeu.FonctionsJeu;
 
 public class Expedition
 {

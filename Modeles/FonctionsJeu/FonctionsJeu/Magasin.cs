@@ -2,7 +2,7 @@
 using Modeles.Items;
 using Modeles.Items.Objets;
 using static Modeles.Extensions;
-namespace Modeles.FonctionsJeu;
+namespace Modeles.FonctionsJeu.FonctionsJeu;
 
 public class Magasin
 {

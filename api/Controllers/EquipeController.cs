@@ -2,7 +2,7 @@
 
 using Modeles.Character;
 using Modeles.Character.Personnage;
-using Modeles.FonctionsJeu;
+using Modeles.FonctionsJeu.FonctionsJeu;
 using Modeles.MoveSet.Capacites;
 
 namespace api.Controllers;

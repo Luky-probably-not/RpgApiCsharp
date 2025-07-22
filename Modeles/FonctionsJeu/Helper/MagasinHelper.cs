@@ -1,4 +1,6 @@
-﻿namespace Modeles.FonctionsJeu.Helper;
+﻿using Modeles.FonctionsJeu.FonctionsJeu;
+
+namespace Modeles.FonctionsJeu.Helper;
 
 public static class MagasinHelper
 {

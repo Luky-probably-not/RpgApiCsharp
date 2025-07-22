@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Modeles.FonctionsJeu;
+using Modeles.FonctionsJeu.FonctionsJeu;
 
 namespace api.Controllers;
 

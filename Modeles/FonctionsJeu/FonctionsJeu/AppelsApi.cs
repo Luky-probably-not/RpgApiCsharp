@@ -4,7 +4,7 @@ using Modeles.Character;
 using Modeles.FonctionsJeu.MiniGames;
 using Modeles.LabyrintheLogique;
 using static Modeles.Json.Options;
-namespace Modeles.FonctionsJeu;
+namespace Modeles.FonctionsJeu.FonctionsJeu;
 
 public class AppelsApi
 {

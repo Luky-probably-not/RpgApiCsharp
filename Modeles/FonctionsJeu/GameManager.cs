@@ -4,6 +4,7 @@ using static Modeles.FonctionsJeu.Helper.MagasinHelper;
 using static Modeles.FonctionsJeu.Helper.MiniJeuHelper;
 using static Modeles.FonctionsJeu.Helper.CombatHelper;
 using Modeles.FonctionsJeu.Helper;
+using Modeles.FonctionsJeu.FonctionsJeu;
 namespace Modeles.FonctionsJeu;
 
 public class GameManager
