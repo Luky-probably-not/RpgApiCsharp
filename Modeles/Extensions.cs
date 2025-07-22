@@ -29,7 +29,7 @@ public static class Extensions
     public static List<Dictionary<int, string>> SplitEveryNth(this Capacite cap, int n)
     {
         var temp = cap.Description.Split(" ").ToList();
-        var index = temp.FindIndex(x => x is "{ValeurPourcent}" or "{Valeur}");
+        var index = temp.FindIndex(x => x is "{ValeurPourcent}" or "{Valeur}" or "{Valeur10}");
         temp[index] = cap.RemplacerValeurDescription(temp[index]);
         var valeur = temp[index];
         List<Dictionary<int, string>> result = [new Dictionary<int, string> { { 0, "" } }, new Dictionary<int, string> { { 0, "" } }, new Dictionary<int, string> { { 0, "" } }];

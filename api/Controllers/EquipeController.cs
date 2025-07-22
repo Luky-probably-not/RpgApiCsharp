@@ -19,7 +19,7 @@ public class EquipeController(ILogger<EquipeController> logger) : Controller
         [
             new Chevalier
             {
-                Capacites = { new Frappe(), new AttaqueZone(), new Buff() }
+                Capacites = { new Frappe(), new AttaqueZone(), new VolPv() }
             }, 
             new Sorcier
             {

@@ -4,6 +4,7 @@ using Modeles.Capacites;
 using Modeles.Character;
 using Modeles.Character.Ennemie;
 using Modeles.Character.Personnage;
+using Modeles.FonctionsJeu.MiniGames;
 using Modeles.Objets;
 
 namespace Modeles.Json;
@@ -56,12 +57,13 @@ public static class Options
                                     DerivedTypes =
                                     {
                                         new JsonDerivedType(typeof(AttaqueZone), nameof(AttaqueZone)),
-                                        new JsonDerivedType(typeof(Buff), nameof(Buff)),
-                                        new JsonDerivedType(typeof(Energie), nameof(Energie)),
-                                        new JsonDerivedType(typeof(Frappe), nameof(Frappe)),
-                                        new JsonDerivedType(typeof(MultiCoup), nameof(MultiCoup)),
-                                        new JsonDerivedType(typeof(Sacrifice), nameof(Sacrifice)),
-                                        new JsonDerivedType(typeof(Soin), nameof(Soin))
+                                        new JsonDerivedType(typeof(Buff),        nameof(Buff)),
+                                        new JsonDerivedType(typeof(Energie),     nameof(Energie)),
+                                        new JsonDerivedType(typeof(Frappe),      nameof(Frappe)),
+                                        new JsonDerivedType(typeof(MultiCoup),   nameof(MultiCoup)),
+                                        new JsonDerivedType(typeof(Sacrifice),   nameof(Sacrifice)),
+                                        new JsonDerivedType(typeof(Soin),        nameof(Soin)),
+                                        new JsonDerivedType(typeof(VolPv),       nameof(VolPv))
                                     }
                                 };
                                 break;
@@ -77,9 +79,22 @@ public static class Options
                                         new JsonDerivedType(typeof(PotionDoubleDegats), nameof(PotionDoubleDegats)),
                                         new JsonDerivedType(typeof(PotionEnergie), nameof(PotionEnergie)),
                                         new JsonDerivedType(typeof(PotionReductionDegats), nameof(PotionReductionDegats)),
-                                        new JsonDerivedType(typeof(PotionSoin), nameof(PotionSoin))                                    }
+                                        new JsonDerivedType(typeof(PotionSoin), nameof(PotionSoin))
+                                    }
                                 };
+                                break;
                                 
+                            case var t when t == typeof(MiniJeu):
+                                ti.PolymorphismOptions = new JsonPolymorphismOptions
+                                {
+                                    TypeDiscriminatorPropertyName = "$type",
+                                    IgnoreUnrecognizedTypeDiscriminators =true,
+                                    DerivedTypes =
+                                    {
+                                        new JsonDerivedType(typeof(Memory), nameof(Memory)),
+                                        new JsonDerivedType(typeof(TimingMiniGame), nameof(TimingMiniGame))
+                                    }
+                                };
                                 break;
                         }
                     }

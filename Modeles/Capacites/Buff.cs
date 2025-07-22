@@ -14,4 +14,5 @@ public class Buff : Capacite
     }
 
     public override void Utiliser(Entite utilisateur, List<Entite> cibles) { }
+    public override void Utiliser(Entite utilisateur, List<Entite> equipe, List<Entite> ennemies) { }
 }

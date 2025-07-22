@@ -264,7 +264,7 @@ public class Labyrinthe
 
     private void GenererRencontre()
     {
-        for (var i = 0; i < Taille/10; i++)
+        for (var i = 0; i < Taille; i++)
         {
             var rand = new Random();
             var col = rand.Next(Taille);
@@ -298,7 +298,7 @@ public class Labyrinthe
 
     private void GenererMiniJeu()
     {
-        for (var i = 0; i < Taille; i++)
+        for (var i = 0; i < Taille/5; i++)
         {
             var rand = new Random();
             var col = rand.Next(Taille);

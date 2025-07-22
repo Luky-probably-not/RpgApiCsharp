@@ -5,17 +5,29 @@ using Modeles.Objets;
 namespace api.Controllers;
 
 [ApiController]
-[Route("api/memory")]
-public class MemoryController(ILogger<MemoryController> logger) : Controller
+[Route("/api/minijeu")]
+public class MiniJeuController(ILogger<MiniJeuController> logger) : Controller
 {
-    private readonly ILogger<MemoryController> _logger = logger;
+    private readonly ILogger<MiniJeuController> _logger = logger;
 
     [HttpGet("{sommeNiveau:int}")]
-    public Memory Get(int sommeNiveau)
+    public MiniJeu? Get(int sommeNiveau)
+    {
+        List<string> jeux = ["memory", "timing"];
+        var rand = new Random();
+
+        return jeux[rand.Next(jeux.Count)] switch
+        {
+            "memory" => GetMemory(sommeNiveau),
+            "timing" => GetTiming(),
+            _ => null,
+        };
+    }
+
+    private static Memory GetMemory(int sommeNiveau)
     {
         var rand = new Random();
 
-        KeyValuePair<string, int> kvp;
         var quantite = new Dictionary<string, int>()
         {
             { nameof(PotionSoin), 1 },
@@ -29,7 +41,7 @@ public class MemoryController(ILogger<MemoryController> logger) : Controller
 
         quantite.Remove(nameof(PotionDoubleDegats));
         quantite.Remove(nameof(PotionReductionDegats));
-        kvp = quantite.ElementAt(rand.Next(quantite.Count));
+        var kvp = quantite.ElementAt(rand.Next(quantite.Count));
         quantite[kvp.Key]++;
         kvp = quantite.ElementAt(rand.Next(quantite.Count));
         quantite[kvp.Key]++;
@@ -45,7 +57,12 @@ public class MemoryController(ILogger<MemoryController> logger) : Controller
             kvp = quantite.ElementAt(rand.Next(quantite.Count));
             quantite[kvp.Key]++;
         }
+
         return new Memory(quantite);
     }
 
+    private static TimingMiniGame GetTiming()
+    {
+        return new TimingMiniGame();
+    }
 }

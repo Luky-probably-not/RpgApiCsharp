@@ -4,28 +4,23 @@ using static Modeles.Extensions;
 
 namespace Modeles.FonctionsJeu.MiniGames;
 
-public class Memory : MiniJeu
+public class Memory() : MiniJeu()
 {
-    public List<List<string>> ObjetsLists { get; set; }
-    public List<List<bool>> Trouve { get; set; }
-
-    public Dictionary<string, int> Compteur { get; set; } = new()
+    
+    public Memory(Dictionary<string, int> quantite) : this()
     {
-        { nameof(PotionSoin), 0 },
-        { nameof(PotionEnergie), 0 },
-        { nameof(AttaqueBoost), 0 },
-        { nameof(DefenseBoost), 0 },
-        { nameof(PotionDoubleDegats), 0 },
-        { nameof(PotionReductionDegats), 0 },
-    };
-    public int ActionsRestante { get; set; } = 6;
-    public int Choix { get; set; } = 0;
-    public int PremierCoup { get; set; } = 0;
-
-    public Memory(){}
-
-    public Memory(Dictionary<string, int> quantite)
-    {
+        Compteur = new(){
+            { nameof(PotionSoin), 0 },
+            { nameof(PotionEnergie), 0 },
+            { nameof(AttaqueBoost), 0 },
+            { nameof(DefenseBoost), 0 },
+            { nameof(PotionDoubleDegats), 0 },
+            { nameof(PotionReductionDegats), 0 },
+        };
+        ActionsRestante = 6;
+        Choix = 0;
+        Choix = (int)Choix;
+        PremierCoup = 0;
         ObjetsLists = [];
         Trouve = [];
         for (var i = 0; i < 3; i++)
@@ -55,7 +50,7 @@ public class Memory : MiniJeu
                 var x2 = rand.Next(3);
                 var y = rand.Next(4);
                 var y2 = rand.Next(4);
-                while (ObjetsLists[x][y] != "" || ObjetsLists[x2][y2] != "" || x == x2 && y == y2)
+                while (ObjetsLists![x][y] != "" || ObjetsLists[x2][y2] != "" || x == x2 && y == y2)
                 {
                     x = rand.Next(3);
                     y = rand.Next(4);
@@ -85,16 +80,16 @@ public class Memory : MiniJeu
             Thread.Sleep(1000);
             if (!VerifieCoup())
             {
-                Trouve[Choix / 4][Choix % 4] = false;
-                Trouve[PremierCoup / 4][PremierCoup % 4] = false;
+                Trouve![(int)Choix! / 4][(int)Choix! % 4] = false;
+                Trouve[(int)PremierCoup! / 4][(int)PremierCoup! % 4] = false;
             }
             else
-                Compteur[ObjetsLists[Choix / 4][Choix % 4]]++;
+                Compteur![ObjetsLists![(int)Choix! / 4][(int)Choix! % 4]]++;
             ActionsRestante--;
         }
 
         AfficherSolution();
-        recompense = Compteur;
+        recompense = Compteur!;
     }
 
     public void Afficher()
@@ -102,13 +97,13 @@ public class Memory : MiniJeu
         Console.Clear();
         var x = 0;
         
-        foreach (var list in ObjetsLists)
+        foreach (var list in ObjetsLists!)
         {
             var y = 0;
             foreach (var obj in list)
             {
                 Console.Write(
-                    Trouve[x][y] 
+                    Trouve![x][y] 
                         ? x*4+y == Choix 
                             ? new StringColorise("▉",Color.White).Str + SpriteObjet(obj).Str + " "
                             : " " + SpriteObjet(obj).Str + " " 
@@ -129,7 +124,7 @@ public class Memory : MiniJeu
     {
         Console.Clear();
 
-        foreach (var list in ObjetsLists)
+        foreach (var list in ObjetsLists!)
         {
             foreach (var obj in list)
             {
@@ -142,12 +137,12 @@ public class Memory : MiniJeu
 
     public bool VerifieCoup()
     {
-        return ObjetsLists[Choix / 4][Choix % 4] == ObjetsLists[PremierCoup / 4][PremierCoup % 4];
+        return ObjetsLists![(int)Choix! / 4][(int)Choix! % 4] == ObjetsLists[(int)PremierCoup! / 4][(int)PremierCoup! % 4];
     }
 
     public void Retourne()
     {
-        Trouve[Choix / 4][Choix % 4] = true;
+        Trouve![(int)Choix! / 4][(int)Choix! % 4] = true;
     }
 
     public void ChoixAction()
@@ -179,7 +174,7 @@ public class Memory : MiniJeu
             if (choix > 11) choix -= 12;
             if (choix < 0) choix += 12;
             Choix = choix;
-            caseValide = !Trouve[Choix / 4][Choix % 4];
+            caseValide = !Trouve![(int)Choix! / 4][(int)Choix! % 4];
         }
     }
 

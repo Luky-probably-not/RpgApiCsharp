@@ -98,6 +98,11 @@ public abstract class Entite(string nom, int att, int def, int pv, int vitesse, 
         PointDeVie = Math.Min(PointDeVieMax, PointDeVie + (int)(PointDeVieMax * puissanceSoin));
     }
 
+    public void Soigner(int puissanceSoin)
+    {
+        PointDeVie = Math.Min(PointDeVieMax, PointDeVie + puissanceSoin);
+    }
+
     public void Ressuciter(float puissanceSoin)
     {
         if (!Vivant)

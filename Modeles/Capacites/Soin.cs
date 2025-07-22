@@ -11,4 +11,5 @@ public class Soin() : Capacite("Soin", 0.3f, false, true, 3, 0, "Soigne un alliÃ
     }
 
     public override void Utiliser(Entite utilisateur, List<Entite> cibles){ }
+    public override void Utiliser(Entite utilisateur, List<Entite> equipe, List<Entite> ennemies) { }
 }

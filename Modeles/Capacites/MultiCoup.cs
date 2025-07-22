@@ -19,4 +19,5 @@ public class MultiCoup() : Capacite("MultiCoup", 3, false, false, 3, 0, "Inflige
     }
 
     public override void Utiliser(Entite utilisateur, List<Entite> cibles) { }
+    public override void Utiliser(Entite utilisateur, List<Entite> equipe, List<Entite> ennemies) { }
 }

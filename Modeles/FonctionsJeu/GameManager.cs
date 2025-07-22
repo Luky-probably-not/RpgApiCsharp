@@ -35,18 +35,15 @@ public class GameManager
     public List<Entite> Ennemies { get; set; }
     public List<Entite> OrdreAction { get; set; }
 
-    public void Setup(Expedition expe)
-    {
-        expedition = expe;
-    }
-
     public async Task Debut(int tailleLaby)
     {
         var laby = await AppelsApi.GetLabyrinthe(tailleLaby);
         var expe = await AppelsApi.GetExpedition();
         if (laby == null || expe == null)
             Environment.Exit(1);
-        Setup(expe);
+
+        expedition = expe;
+        expedition.Equipe.ForEach(e => e.PointDeVie -= 40);
         Play(laby);
 
     }
@@ -68,17 +65,17 @@ public class GameManager
                     Achats();
                     break;
                 case "M":
-                    var rand = new Random();
-                    Dictionary<string, int> recompense;
-                    if (rand.NextDouble() > 1)
+                    Dictionary<string, int> recompense = [];
+                    var jeu = AppelsApi.GetMiniJeu(DernierNiveau).GetAwaiter().GetResult();
+                    switch (jeu.GetType())
                     {
-                        AppelsApi.GetMemory(DernierNiveau).GetAwaiter().GetResult().Jouer(out recompense);
-                    }
-                    else
-                    {
-                        var jeu = new TimingMiniGame();
-                        jeu.Jouer(out string res);
-                        recompense = AppelsApi.GetRecompenseTiming(DernierNiveau, res).GetAwaiter().GetResult();
+                        case var t when t == typeof(Memory):
+                            jeu.Jouer(out recompense);
+                            break;
+                        case var t when t == typeof(TimingMiniGame):
+                            jeu.Jouer(out string res);
+                            recompense = AppelsApi.GetRecompenseTiming(DernierNiveau,res).GetAwaiter().GetResult();
+                            break;
                     }
                     foreach (var kvp in recompense.Where(kvp => kvp.Value != 0))
                     {
@@ -203,9 +200,17 @@ public class GameManager
                     var cap = ChoixCapacite();
                     if (cap == null)
                         continue;
+
+                    if (cap.ToutLeMonde)
+                    {
+                        cap.Utiliser(expedition.Equipe.Find(e => e == OrdreAction[0])!, expedition.Equipe, Ennemies);
+                        var vivant = Ennemies.Where(e => e.Vivant);
+                        expedition.Equipe.Find(e => e == OrdreAction[0])!.FinTour(vivant.Count() != Ennemies.Count);
+                        return;
+                    }
                     cibles = ChoixCible(cap);
                     var doublexp = false;
-                    if (cap.Zone)
+                     if (cap.Zone)
                     {
                         cap.Utiliser(expedition.Equipe.Find(e => e == OrdreAction[0])!, cibles);
                         var vivant = cibles.Where(e => e.Vivant);

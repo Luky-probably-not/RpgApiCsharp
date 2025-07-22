@@ -12,4 +12,5 @@ public class Frappe() : Capacite("Frappe", 5, false, false, 0, 3, "Inflige {Vale
     }
 
     public override void Utiliser(Entite utilisateur, List<Entite> cibles){ }
+    public override void Utiliser(Entite utilisateur, List<Entite> equipe, List<Entite> ennemies) { }
 }

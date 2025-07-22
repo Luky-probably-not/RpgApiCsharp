@@ -13,4 +13,5 @@ public class Sacrifice() : Capacite("Sacrifice", 0.4f, false, false, 9, 0, "Perd
     }
 
     public override void Utiliser(Entite utilisateur, List<Entite> cibles) { }
+    public override void Utiliser(Entite utilisateur, List<Entite> equipe, List<Entite> ennemies) { }
 }

@@ -2,15 +2,13 @@
 
 namespace Modeles.Character.Ennemie;
 
-public class Zombie : Entite, IAction
+public class Zombie() : Entite("Zombie", 15, 20, 50, 80, [
+    "     ",
+    "   ☺ ",
+    "   #*",
+    "  // "
+]), IAction
 {
-    public Zombie() : base("Zombie", 15, 20, 50, 80, [
-        "     ",
-        "   ☺ ",
-        "   #*",
-        "  // "
-    ]) { }
-
     public Capacite ChoisirCapacite()
     {
         List<Capacite> choixPossible = Capacites.FindAll(c => c.Cout <= PointAction);

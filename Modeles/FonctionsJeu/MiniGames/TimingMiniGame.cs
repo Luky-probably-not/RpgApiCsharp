@@ -1,15 +1,9 @@
-﻿using System.Data.SqlTypes;
-using System.Drawing;
-using static Modeles.Extensions;
+﻿using System.Drawing;
 
 namespace Modeles.FonctionsJeu.MiniGames;
 
-public class TimingMiniGame : MiniJeu
+public class TimingMiniGame() : MiniJeu()
 {
-    public List<StringColorise> Barre;
-    public List<string> Joueur;
-    public int indexJoueur = 1;
-    public bool InputPressed = false;
 
     public override void Jouer() {}
     public override void Jouer(out Dictionary<string, int> result) { result = []; }
@@ -19,25 +13,25 @@ public class TimingMiniGame : MiniJeu
         Setup();
         Afficher();
         var direction = true;
-        Joueur.Swap(0, 1);
+        Joueur!.Swap(0, 1);
 
         InputJouer();
         do
         {
-            Joueur.Swap(indexJoueur, indexJoueur + (direction ? 1 : -1));
-            indexJoueur += direction ? 1 : -1;
-            if (indexJoueur + 1 == Joueur.Count || indexJoueur == 0)
+            Joueur!.Swap((int)IndexJoueur!, (int)IndexJoueur! + (direction ? 1 : -1));
+            IndexJoueur += direction ? 1 : -1;
+            if (IndexJoueur + 1 == Joueur!.Count || IndexJoueur == 0)
                 direction = !direction;
             Afficher();
             Thread.Sleep(50);
-        } while (!InputPressed);
+        } while (!(bool)InputPressed!);
 
         result = Resultat();
     }
 
     public string Resultat()
     {
-        return indexJoueur switch
+        return IndexJoueur switch
         {
             < 5 => nameof(Color.White),
             < 8 => nameof(Color.Red),
@@ -58,6 +52,8 @@ public class TimingMiniGame : MiniJeu
 
     public void Setup()
     {
+        IndexJoueur = 1;
+        InputPressed = false;
         Barre =
         [
             new(new('▉', 5), Color.White),
@@ -76,9 +72,9 @@ public class TimingMiniGame : MiniJeu
     public void Afficher()
     {
         Console.Clear();
-        Barre.ForEach(e => Console.Write(e.Str));
+        Barre!.ForEach(e => Console.Write(e.Str));
         Console.WriteLine();
-        Joueur.ForEach(Console.Write);
+        Joueur!.ForEach(Console.Write);
         Console.WriteLine();
     }
 }
