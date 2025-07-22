@@ -146,7 +146,6 @@ $tf/
 _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
-*.sln.DotSettings.user
 # TeamCity is a build add-in
 _TeamCity*
 
