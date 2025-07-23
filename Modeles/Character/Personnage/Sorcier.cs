@@ -1,11 +1,8 @@
 ﻿namespace Modeles.Character.Personnage;
 
-public class Sorcier : Entite
-{
-    public Sorcier() : base("Sorcier", 5, 8, 50, 125, [
-        " ⚗  ᛉ",
-        "⧶║╰-╡",
-        "/ \\ │",
-        "⎸ ⎹ ⤓"
-    ]) { }
-}
+public class Sorcier() : Entite("Sorcier", 10, 25, 50, 125, [
+    " ⚗  ᛉ",
+    "⧶║╰-╡",
+    "/ \\ │",
+    "⎸ ⎹ ⤓"
+]);

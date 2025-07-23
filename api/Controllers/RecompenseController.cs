@@ -11,7 +11,7 @@ public class RecompenseController(ILogger<RecompenseController> logger) : Contro
 {
     private readonly ILogger<RecompenseController> _logger = logger;
 
-    [HttpGet("{sommeNiveau:int}")]
+    [HttpGet("combat/{sommeNiveau:int}")]
     public Dictionary<string, int> Get(int sommeNiveau)
     {
 
@@ -28,7 +28,7 @@ public class RecompenseController(ILogger<RecompenseController> logger) : Contro
         return result;
     }
 
-    [HttpGet("{sommeNiveau:int},{couleur}")]
+    [HttpGet("timing/{sommeNiveau:int},{couleur}")]
     public Dictionary<string, int> Get(int sommeNiveau, string couleur)
     {
         Dictionary<string, int> recompense = [];
@@ -48,5 +48,21 @@ public class RecompenseController(ILogger<RecompenseController> logger) : Contro
             _     when couleur == nameof(Color.Yellow) => new() { { nameof(PotionSoin), 6 }, { nameof(PotionEnergie), 6 }, { nameof(AttaqueBoost), 4 }, { nameof(DefenseBoost), 4 }, { nameof(PotionReductionDegats), 3 }, { nameof(PotionDoubleDegats), 3 } },
             _ => []
         };
+    }
+
+    [HttpGet("esquive/{niveau:int},{score:int}")]
+    public Dictionary<string, int> Get(int niveau, int score)
+    {
+        var sommeNiveau = (int)Math.Round( niveau * (1 / Math.Log(score, 10) + 2));
+        var result = new Dictionary<string, int>
+        {
+            { nameof(PotionSoin), sommeNiveau < 10 ? 0 : Objet.RandomAmount(sommeNiveau)},
+            { nameof(PotionEnergie), sommeNiveau < 10 ? 0 : Objet.RandomAmount(sommeNiveau)},
+            { nameof(AttaqueBoost), sommeNiveau < 50 ? 0 : Objet.RandomAmount(sommeNiveau-50)},
+            { nameof(DefenseBoost), sommeNiveau < 50 ? 0 : Objet.RandomAmount(sommeNiveau-50)},
+            { nameof(PotionDoubleDegats), sommeNiveau < 100 ? 0 : Objet.RandomAmount(sommeNiveau-100)},
+            { nameof(PotionReductionDegats), sommeNiveau < 100 ? 0 : Objet.RandomAmount(sommeNiveau-100)},
+        };
+        return result;
     }
 }

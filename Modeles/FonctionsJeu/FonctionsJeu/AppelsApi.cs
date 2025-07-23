@@ -35,13 +35,19 @@ public class AppelsApi
 
     public static async Task<Dictionary<string, int>> GetRecompenses(int sommeNiveau)
     {
-        var response = await Client.GetAsync($"api/loot/{sommeNiveau}");
+        var response = await Client.GetAsync($"api/loot/combat/{sommeNiveau}");
         return (await response.Content.ReadFromJsonAsync<Dictionary<string, int>>(OptionsJson))!;
     }
 
     public static async Task<Dictionary<string, int>> GetRecompenseTiming(int sommeNiveau, string couleur)
     {
-        var response = await Client.GetAsync($"api/loot/{sommeNiveau},{couleur}");
+        var response = await Client.GetAsync($"api/loot/timing/{sommeNiveau},{couleur}");
+        return (await response.Content.ReadFromJsonAsync<Dictionary<string, int>>(OptionsJson))!;
+    }
+
+    public static async Task<Dictionary<string, int>> GetRecompenseEsquive(int sommeNiveau, int score)
+    {
+        var response = await Client.GetAsync($"api/loot/esquive/{sommeNiveau},{score}");
         return (await response.Content.ReadFromJsonAsync<Dictionary<string, int>>(OptionsJson))!;
     }
 

@@ -55,7 +55,6 @@ public class GameManager
                     Niveau += 5;
                     break;
                 case "S":
-                    Expedition.Pieces += 500;
                     Magasin(Niveau).GetAwaiter().GetResult();
                     break;
                 case "M":

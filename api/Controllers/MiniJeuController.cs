@@ -13,13 +13,14 @@ public class MiniJeuController(ILogger<MiniJeuController> logger) : Controller
     [HttpGet("{sommeNiveau:int}")]
     public MiniJeu? Get(int sommeNiveau)
     {
-        List<string> jeux = ["memory", "timing"];
+        List<string> jeux = ["memory", "timing","esquive"];
         var rand = new Random();
 
         return jeux[rand.Next(jeux.Count)] switch
         {
             "memory" => GetMemory(sommeNiveau),
             "timing" => GetTiming(),
+            "esquive" => GetEsquive(),
             _ => null,
         };
     }
@@ -64,5 +65,10 @@ public class MiniJeuController(ILogger<MiniJeuController> logger) : Controller
     private static TimingMiniGame GetTiming()
     {
         return new TimingMiniGame();
+    }
+
+    private static Esquive GetEsquive()
+    {
+        return new Esquive();
     }
 }

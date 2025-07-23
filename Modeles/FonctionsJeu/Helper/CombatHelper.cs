@@ -117,6 +117,13 @@ public static class CombatHelper
                     var cap = ChoixCapacite();
                     if (cap == null)
                         continue;
+                    if (cap.ToutLeMonde)
+                    {
+                        cap.Utiliser(_expedition.Equipe.Find(e => e == _ordreAction[0])!, _expedition.Equipe, _ennemies);
+                        _expedition.Equipe.Find(e => e == _ordreAction[0])!.FinTour(false);
+                        return;
+
+                    }
                     cibles = ChoixCible(cap);
                     var doublexp = false;
                     if (cap.Zone)

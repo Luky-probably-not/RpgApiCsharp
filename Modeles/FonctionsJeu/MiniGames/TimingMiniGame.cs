@@ -4,10 +4,6 @@ namespace Modeles.FonctionsJeu.MiniGames;
 
 public class TimingMiniGame() : MiniJeu()
 {
-
-    public override void Jouer() {}
-    public override void Jouer(out Dictionary<string, int> result) { result = []; }
-
     public override void Jouer(out string result)
     {
         Setup();
@@ -15,7 +11,7 @@ public class TimingMiniGame() : MiniJeu()
         var direction = true;
         Joueur!.Swap(0, 1);
 
-        InputJouer();
+        InputJoueur();
         do
         {
             Joueur!.Swap((int)IndexJoueur!, (int)IndexJoueur! + (direction ? 1 : -1));
@@ -41,7 +37,7 @@ public class TimingMiniGame() : MiniJeu()
         };
     }
 
-    public void InputJouer()
+    public void InputJoueur()
     {
         Task.Factory.StartNew(() =>
         {
@@ -77,4 +73,7 @@ public class TimingMiniGame() : MiniJeu()
         Joueur!.ForEach(Console.Write);
         Console.WriteLine();
     }
+    public override void Jouer() { }
+    public override void Jouer(out Dictionary<string, int> result) { result = []; }
+    public override void Jouer(out int result) { result = 0; }
 }

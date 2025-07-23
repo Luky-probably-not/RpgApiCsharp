@@ -22,6 +22,10 @@ public static class MiniJeuHelper
                 jeu.Jouer(out string res);
                 recompense = AppelsApi.GetRecompenseTiming(niveau, res).GetAwaiter().GetResult();
                 break;
+            case var t when t == typeof(Esquive):
+                jeu.Jouer(out int score);
+                recompense = AppelsApi.GetRecompenseEsquive(niveau, score).GetAwaiter().GetResult();
+                break;
         }
         foreach (var kvp in recompense.Where(kvp => kvp.Value != 0))
         {

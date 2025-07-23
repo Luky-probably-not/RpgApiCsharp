@@ -46,7 +46,12 @@ public static class Options
                                         new JsonDerivedType(typeof(Chevalier), nameof(Chevalier)),
                                         new JsonDerivedType(typeof(Barbare), nameof(Barbare)),
 
-                                        new JsonDerivedType(typeof(Zombie), nameof(Zombie))
+                                        new JsonDerivedType(typeof(Zombie), nameof(Zombie)),
+                                        new JsonDerivedType(typeof(Slime), nameof(Slime)),
+                                        new JsonDerivedType(typeof(Maudit), nameof(Maudit)),
+                                        new JsonDerivedType(typeof(Gobelin), nameof(Gobelin)),
+
+                                        new JsonDerivedType(typeof(Dragon), nameof(Dragon)),
                                     }
                                 };
                                 break;
@@ -93,7 +98,9 @@ public static class Options
                                     DerivedTypes =
                                     {
                                         new JsonDerivedType(typeof(Memory), nameof(Memory)),
-                                        new JsonDerivedType(typeof(TimingMiniGame), nameof(TimingMiniGame))
+                                        new JsonDerivedType(typeof(TimingMiniGame), nameof(TimingMiniGame)),
+                                        new JsonDerivedType(typeof(Esquive), nameof(Esquive))
+
                                     }
                                 };
                                 break;

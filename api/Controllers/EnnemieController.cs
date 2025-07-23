@@ -11,8 +11,26 @@ public class EnnemieController(ILogger<EnnemieController> logger) : Controller
 {
     private readonly ILogger<EnnemieController> _logger = logger;
 
-    [HttpGet("{niveau}")]
-    public List<Entite> Get(int niveau)
+    [HttpGet("{sommeNiveau}")]
+    public List<Entite> Get(int sommeNiveau)
+    {
+        List<string> enemiesPossible = [nameof(Zombie), nameof(Gobelin), nameof(Maudit), nameof(Slime)];
+        var rand = new Random();
+        var niveau = Niveau(sommeNiveau);
+        var result = new List<Entite>();
+        for (var i = 0; i < 3; i++)
+        {
+            var entite = Entite.EntiteParNom(enemiesPossible[rand.Next(enemiesPossible.Count)]);
+            entite.Niveau = niveau[i];
+            entite.Capacites = [
+                new Frappe(), new Soin()
+            ];
+            result.Add(entite);
+        }
+        return result;
+    }
+
+    private static List<int> Niveau(int niveau)
     {
         int nv1;
         int nv2;
@@ -26,27 +44,6 @@ public class EnnemieController(ILogger<EnnemieController> logger) : Controller
                 break;
         }
         var list = new[] { nv1, nv2, nv3 };
-        var max = list.Max();
-        var min = list.Min();
-        var last = niveau - max - min;
-        List<Entite> ennemies =
-        [
-            new Zombie
-            {
-                Niveau = last,
-                Capacites = { new Frappe(), new Soin() }
-            },
-            new Zombie
-            {
-                Niveau = max,
-                Capacites = { new Frappe(), new Soin() }
-            },
-            new Zombie
-            {
-                Niveau = min,
-                Capacites = { new Frappe(), new Soin() }
-            }
-        ];
-        return ennemies;
+        return [niveau - list.Max() - list.Min(), list.Max(), list.Min()];
     }
 }

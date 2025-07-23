@@ -1,4 +1,6 @@
-﻿using Modeles.MoveSet;
+﻿using Modeles.Character.Ennemie;
+using Modeles.Character.Personnage;
+using Modeles.MoveSet;
 
 namespace Modeles.Character;
 
@@ -154,5 +156,20 @@ public abstract class Entite(string nom, int att, int def, int pv, int vitesse, 
         XpActuel -= XpBesoin;
         XpBesoin = Niveau ^ 2 + 100;
         MettreANiveau();
+    }
+
+    public static Entite EntiteParNom(string nom)
+    {
+        return nom switch
+        {
+            nameof(Barbare) => new Barbare(),
+            nameof(Chevalier) => new Chevalier(),
+            nameof(Sorcier) => new Sorcier(),
+            nameof(Dragon) => new Dragon(),
+            nameof(Gobelin) => new Gobelin(),
+            nameof(Maudit) => new Maudit(),
+            nameof(Slime) => new Slime(),
+            _ => new Zombie()
+        };
     }
 }

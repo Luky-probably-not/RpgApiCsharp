@@ -64,9 +64,6 @@ public class Memory() : MiniJeu()
         }
     }
 
-    public override void Jouer() {}
-    public override void Jouer(out string result) { result = ""; }
-
     public override void Jouer(out Dictionary<string, int> recompense)
     {
         while (ActionsRestante > 0)
@@ -191,4 +188,8 @@ public class Memory() : MiniJeu()
             _ => new("")
         };
     }
+
+    public override void Jouer() { }
+    public override void Jouer(out string result) { result = ""; }
+    public override void Jouer(out int result) { result = 0; }
 }

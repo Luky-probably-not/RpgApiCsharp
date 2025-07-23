@@ -1,11 +1,8 @@
 ﻿namespace Modeles.Character.Personnage;
 
-public class Barbare : Entite
-{
-    public Barbare() : base("Barbare", 20, 5, 100, 120, [
-        " +−+♃",
-        " |⎉| ",
-        "  ⧋  ",
-        " / \\ "
-    ]) { }
-}
+public class Barbare() : Entite("Barbare", 30, 30, 100, 120, [
+    " +−+♃",
+    " |⎉| ",
+    "  ⧋  ",
+    " / \\ "
+]);
