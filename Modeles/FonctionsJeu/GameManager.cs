@@ -1,9 +1,7 @@
-﻿using Modeles.LabyrintheLogique;
-using static Modeles.FonctionsJeu.Helper.LabyHelper;
+﻿using static Modeles.FonctionsJeu.Helper.LabyHelper;
 using static Modeles.FonctionsJeu.Helper.MagasinHelper;
 using static Modeles.FonctionsJeu.Helper.MiniJeuHelper;
 using static Modeles.FonctionsJeu.Helper.CombatHelper;
-using Modeles.FonctionsJeu.Helper;
 using Modeles.FonctionsJeu.FonctionsJeu;
 namespace Modeles.FonctionsJeu;
 
@@ -12,7 +10,7 @@ public class GameManager
     private static GameManager? _instance = null;
 
     public Expedition Expedition;
-    private int Niveau = 10;
+    private int _niveau = 4;
 
     private GameManager()
     {
@@ -51,14 +49,14 @@ public class GameManager
             switch (cell)
             {
                 case "E":
-                    Combat(Niveau).GetAwaiter().GetResult();
-                    Niveau += 5;
+                    Combat(_niveau).GetAwaiter().GetResult();
+                    _niveau += 5;
                     break;
                 case "S":
-                    Magasin(Niveau).GetAwaiter().GetResult();
+                    Magasin(_niveau).GetAwaiter().GetResult();
                     break;
                 case "M":
-                    MiniJeu(Niveau).GetAwaiter().GetResult();
+                    MiniJeu(_niveau).GetAwaiter().GetResult();
                     break;
             }
         }

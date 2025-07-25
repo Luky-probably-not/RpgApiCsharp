@@ -1,13 +1,11 @@
 ﻿using System.Drawing;
-using System.Runtime.InteropServices.JavaScript;
 using static Modeles.Extensions;
 namespace Modeles.FonctionsJeu.MiniGames;
 
 public class Esquive() : MiniJeu()
 {
     public override void Jouer(out int result)
-    {
-        
+    {        
         Setup();
         InputJoueur();
         PreparerAttaque();
@@ -15,9 +13,12 @@ public class Esquive() : MiniJeu()
         {
             Affichage();
             Thread.Sleep(100);
+
+            if ((Vague < 4 * Difficulte)) continue;
+            Difficulte++;
+            Attaques!.Add((false,0));
         }
         Affichage();
-        Console.WriteLine(Vague);
         result = (int)Vague!;
     }
 
@@ -55,10 +56,6 @@ public class Esquive() : MiniJeu()
                     DisplayAttaque(Color.Red);
                     VerifierAttaque();
                 }
-
-                if ((Vague < 5 * Difficulte)) continue;
-                Difficulte++;
-                PreparerAttaque();
             }
         });
     }
@@ -127,6 +124,7 @@ public class Esquive() : MiniJeu()
             ligne.ForEach(e => Console.Write($" {e.Str} "));
             Console.Write("\n");
         }
+        Console.WriteLine(Vague);
     }
 
     private void DeplacerJoueur(ConsoleKey touche)

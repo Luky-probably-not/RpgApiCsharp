@@ -23,8 +23,9 @@ public class EnnemieController(ILogger<EnnemieController> logger) : Controller
             var entite = Entite.EntiteParNom(enemiesPossible[rand.Next(enemiesPossible.Count)]);
             entite.Niveau = niveau[i];
             entite.Capacites = [
-                new Frappe(), new Soin()
+                new Frappe(), new AttaqueZone()
             ];
+            entite.PointAction = 2;
             result.Add(entite);
         }
         return result;

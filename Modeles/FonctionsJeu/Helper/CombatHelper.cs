@@ -103,10 +103,13 @@ public static class CombatHelper
 
     private static void Agir()
     {
+        Capacite? cap = null;
+        Objet? obj = null;
+        var choix = -1;
         while (_expedition!.Equipe.Contains(_ordreAction[0]))
         {
-            var choix = ChoixAction();
-            List<Entite> cibles;
+            choix =  choix == -1 ? ChoixAction(cap != null, obj != null) : choix;
+            List<Entite>? cibles;
             switch (choix)
             {
                 case 0:
@@ -114,9 +117,13 @@ public static class CombatHelper
                     Ecran.ChoixAction = nameof(Capacite);
                     Ecran.ChoixCapacite = 0;
                     Ecran.Afficher();
-                    var cap = ChoixCapacite();
+                    cap ??= ChoixCapacite();
                     if (cap == null)
+                    {
+                        choix = -1;
                         continue;
+                    }
+
                     if (cap.ToutLeMonde)
                     {
                         cap.Utiliser(_expedition.Equipe.Find(e => e == _ordreAction[0])!, _expedition.Equipe, _ennemies);
@@ -125,6 +132,11 @@ public static class CombatHelper
 
                     }
                     cibles = ChoixCible(cap);
+                    if (cibles == null)
+                    {
+                        cap = null;
+                        continue;
+                    }
                     var doublexp = false;
                     if (cap.Zone)
                     {
@@ -148,10 +160,19 @@ public static class CombatHelper
                     Ecran.ChoixAction = nameof(Objet);
                     Ecran.ChoixObjet = 0;
                     Ecran.Afficher();
-                    var obj = ChoixObjet();
+                    obj ??= ChoixObjet();
                     if (obj == null)
+                    {
+                        choix = -1;
                         continue;
+                    }
+
                     cibles = ChoixCible(obj);
+                    if (cibles == null)
+                    {
+                        obj = null;
+                        continue;
+                    }
                     if (obj.Zone)
                         obj.Utiliser(cibles);
                     else
@@ -165,7 +186,7 @@ public static class CombatHelper
         }
     }
 
-    private static int ChoixAction()
+    private static int ChoixAction(bool cap, bool obj)
     {
         var choix = 0;
         List<ConsoleKey> toucheValide =
@@ -174,9 +195,9 @@ public static class CombatHelper
             ConsoleKey.RightArrow,
             ConsoleKey.Spacebar
         ];
-        ConsoleKey touche = ConsoleKey.A;
+        var touche = ConsoleKey.A;
         MajEcran();
-        Ecran.ChoixAction = "";
+        Ecran.ChoixAction = cap ? nameof(Capacite) : obj ? nameof(Objet) : "";
         Ecran.Afficher();
         while (touche != ConsoleKey.Spacebar)
         {
@@ -266,21 +287,20 @@ public static class CombatHelper
         return touche == ConsoleKey.Escape ? null : Objet.ObjetParNom(Expedition.IndexObjet[choix]);
     }
 
-    private static List<Entite> ChoixCible(Capacite cap)
+    private static List<Entite>? ChoixCible(Capacite cap)
     {
         var choix = 0;
         List<ConsoleKey> toucheValide =
         [
             ConsoleKey.LeftArrow,
             ConsoleKey.RightArrow,
-            ConsoleKey.Spacebar
+            ConsoleKey.Spacebar,
+            ConsoleKey.Escape
         ];
         var touche = ConsoleKey.A;
         var cibleVivante = false;
-        while (touche != ConsoleKey.Spacebar || !cibleVivante)
+        while ((touche != ConsoleKey.Spacebar && touche != ConsoleKey.Escape) || !cibleVivante)
         {
-            if (choix > 2) choix -= 3;
-            if (choix < 0) choix += 3;
             MajEcran();
             Ecran.Cibles = cap switch
             {
@@ -293,46 +313,59 @@ public static class CombatHelper
             cibleVivante = Ecran.Cibles.Any(e => e.Vivant);
             Ecran.ChoixAction = nameof(Capacite);
             Ecran.Afficher();
+            
             touche = Console.ReadKey().Key;
             if (!toucheValide.Contains(touche)) continue;
+            if (touche == ConsoleKey.Escape) break;
+
             choix += touche switch
             {
                 ConsoleKey.RightArrow => 1,
                 ConsoleKey.LeftArrow => -1,
                 _ => 0
             };
+
+            if (choix > 2) choix -= 3;
+            if (choix < 0) choix += 3;
+
         }
-        return Ecran.Cibles;
+        return touche == ConsoleKey.Escape ? null : Ecran.Cibles;
     }
 
-    private static List<Entite> ChoixCible(Objet obj)
+    private static List<Entite>? ChoixCible(Objet obj)
     {
         var choix = 0;
         List<ConsoleKey> toucheValide =
         [
             ConsoleKey.LeftArrow,
             ConsoleKey.RightArrow,
-            ConsoleKey.Spacebar
+            ConsoleKey.Spacebar,
+            ConsoleKey.Escape
         ];
         var touche = ConsoleKey.A;
-        while (touche != ConsoleKey.Spacebar)
+        while (touche != ConsoleKey.Spacebar && touche != ConsoleKey.Escape)
         {
-            if (choix > 2) choix -= 3;
-            if (choix < 0) choix += 3;
             MajEcran();
             Ecran.Cibles = obj.Zone ? _expedition!.Equipe : [_expedition!.Equipe[choix]];
             Ecran.ChoixAction = nameof(Objet);
             Ecran.Afficher();
+
             touche = Console.ReadKey().Key;
             if (!toucheValide.Contains(touche)) continue;
+            if (touche == ConsoleKey.Escape) break;
+
             choix += touche switch
             {
                 ConsoleKey.RightArrow => 1,
                 ConsoleKey.LeftArrow => -1,
                 _ => 0
             };
+
+            if (choix > 2) choix -= 3;
+            if (choix < 0) choix += 3;
+
         }
 
-        return Ecran.Cibles;
+        return touche == ConsoleKey.Escape ? null : Ecran.Cibles;
     }
 }

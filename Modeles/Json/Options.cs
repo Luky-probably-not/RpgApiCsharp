@@ -69,7 +69,8 @@ public static class Options
                                         new JsonDerivedType(typeof(MultiCoup),   nameof(MultiCoup)),
                                         new JsonDerivedType(typeof(Sacrifice),   nameof(Sacrifice)),
                                         new JsonDerivedType(typeof(Soin),        nameof(Soin)),
-                                        new JsonDerivedType(typeof(VolPv),       nameof(VolPv))
+                                        new JsonDerivedType(typeof(VolPv),       nameof(VolPv)),
+                                        new JsonDerivedType(typeof(Nerf), nameof(Nerf))
                                     }
                                 };
                                 break;

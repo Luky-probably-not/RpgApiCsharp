@@ -28,7 +28,7 @@ public class EquipeController(ILogger<EquipeController> logger) : Controller
             },
             new Barbare
             {
-                Capacites = { new Frappe(), new MultiCoup(), new Sacrifice() }
+                Capacites = { new Frappe(), new Nerf(), new Sacrifice() }
             }
         ];
         return new Expedition

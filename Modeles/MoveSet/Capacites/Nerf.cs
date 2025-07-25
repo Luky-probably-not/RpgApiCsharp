@@ -2,12 +2,12 @@
 
 namespace Modeles.MoveSet.Capacites;
 
-public class Buff() : Capacite("Buff", 0.3f, false, true, 5, 0,
-    "Augmente l'attaque d'un allié de {ValeurPourcent} de son attaque de base")
+public class Nerf() : Capacite("Nerf", 0.5f, false, false, 5, 0,
+    "Diminue la défense d'un ennemie de {ValeurPourcent}")
 {
     public override void Utiliser(Entite utilisateur, Entite cible)
     {
-        cible.Bonus.Add(new ("Attaque", 1 + Valeur));
+        cible.Malus.Add(new ("Defense", 1 - Valeur));
         utilisateur.PointAction -= Cout;
     }
 
